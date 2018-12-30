@@ -5,6 +5,13 @@
 #define default_y_1p 30
 #define MAP_WIDTH 1080
 #define MAP_HEIGHT 720
+#define CHAR_WIDTH 40
+#define CHAR_HEIGHT 40
+
+#define UP 1
+#define DOWN -1
+#define LEFT 2
+#define RIGHT -2
 class Character{
 	private:
 		double healthP;
