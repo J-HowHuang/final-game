@@ -1,24 +1,24 @@
-//-----------------------------------------------------------------------------
-//                                                              2008/6/26
-//                          A First Sample Code
-//                                                              by????
-//-----------------------------------------------------------------------------
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL\glut.h>//??DevC++??????? #include <GL\openglut.h>
+#include <cstring>
+#include "game.h"
+using namespace std;
 
 void WindowSize(int , int );            //????????????
 void Keyboard(unsigned char , int, int );   //??????
 void Display(void);                     //??
 
+
+Character _1p(0, 0);
+const char GAME_NAME[] = {"awesome game"};
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-   glutInitWindowSize(400,400);         //????
+   glutInitWindowSize(1080,720);         //????
    glutInitWindowPosition(600,80);         //????????
-   glutCreateWindow("???????");      //????
+   glutCreateWindow(GAME_NAME);      //????
    
    //?????????Callback??
    glutReshapeFunc(WindowSize);
@@ -34,27 +34,22 @@ void Display(void)
    glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt(0,0,10.0f,0,0,0,0,1,0);   //????????
-   glBegin(GL_TRIANGLES);
-      glColor3f( 1, 0, 0);glVertex3f( 8.6603, -5, 0);
-      glColor3f( 0, 1, 0);glVertex3f(      0, 10, 0);
-      glColor3f( 0, 0, 1);glVertex3f(-8.6603, -5, 0);
-   glEnd();
+   gluLookAt(540,360,500,540,360,0,0,1,0);   //should be modified
+   _1p.drawCharacter();
    glutSwapBuffers();
 }
 
 void Keyboard(unsigned char key, int x, int y)
 {
-   printf("????????%x\t???????????(%d,%d)\n", key, x, y);
+	
 }
 
 void WindowSize(int w, int h)
 {
-   printf("???????%dX%d\n",w,h);
-   glViewport(0, 0, w, h);            //????????,??????
+   glViewport(0, 0, w, h);            
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   glOrtho(-10,10,-10,10,-10,10);      //????
+   glOrtho(0, 1080, 0, 720, -10, 10);      //should be modified
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
 } 
