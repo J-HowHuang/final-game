@@ -34,7 +34,7 @@ void Display(void)
    glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt(540,360,500,540,360,0,0,1,0);   //should be modified
+   gluLookAt(0,0,20.0f,0,0,0,0,1,0);   //should be modified
    _1p.drawCharacter();
    glutSwapBuffers();
 }
@@ -49,7 +49,7 @@ void WindowSize(int w, int h)
    glViewport(0, 0, w, h);            
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   glOrtho(0, 1080, 0, 720, -10, 10);      //should be modified
+   glOrtho(0, 1080, 0, 720, 0, 20);      //should be modified
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
 } 
