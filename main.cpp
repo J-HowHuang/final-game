@@ -37,7 +37,7 @@ void Display(void)
    glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt(0,0,10.0f,0,0,0,0,1,0);   //????????
+   gluLookAt(0,0,20.0f,0,0,0,0,1,0);   //should be modified
    _1p.drawCharacter();
    _2p.drawCharacter();
    glutSwapBuffers();
