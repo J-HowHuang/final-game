@@ -13,6 +13,10 @@
 #define DOWN -1
 #define LEFT 2
 #define RIGHT -2
+#define DOWN_LEFT 3
+#define DOWN_RIGHT -3
+#define UP_LEFT 4
+#define UP_RIGHT -4
 class Character{
 	private:
 		double healthP;
@@ -33,6 +37,25 @@ class Character{
 		double get_y(){return position_y;}
 		bool moving;
 		void shoot();
+};
+class Mirror{
+	private:
+		double position_x;
+		double position_y;
+		int direction;
+		int id;
+		double speed;
+	public:
+		Mirror(double x, double y, int playerID);
+		~Mirror();
+		void drawMirror();
+		void move(int direct);
+		void rotate(int tao);
+		bool moving;
+		double get_x(){return position_x;}
+		double get_y(){return position_y;}
+		int getDirection(){return direction;}
+		void setDirection(int direct){direction = direct;}
 };
 class Bullet{
 	private:

@@ -14,6 +14,8 @@ void Timer(int);
 
 Character _1p(CHAR_WIDTH, CHAR_HEIGHT, 1);
 Character _2p(MAP_WIDTH - CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2);
+Mirror _1pMirror(MAP_WIDTH - CHAR_WIDTH, CHAR_HEIGHT, 1);
+Mirror _2pMirror(CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2);
 bool keyStates[256] = {0};
 const char GAME_NAME[] = {"awesome game"};
 int main(int argc, char** argv)
@@ -44,6 +46,8 @@ void Display(void)
    gluLookAt(0,0,10.0f,0,0,0,0,1,0);   //should be modified
    _1p.drawCharacter();
    _2p.drawCharacter();
+   _1pMirror.drawMirror();
+   _2pMirror.drawMirror();
    glutSwapBuffers();
 }
 
@@ -76,30 +80,73 @@ void Keyboard(unsigned char key, int x, int y)
 			keyStates['d'] = true;
 			break;
 		//2p character moving
-		case('i'):
+		case('7'):
 			if(_2p.getDirection() != UP){
 				_2p.setDirection(UP);
 			}
-			keyStates['i'] = true;
-			
+			keyStates['7'] = true;
 			break;
-		case('j'):
+		case('y'):
 			if(_2p.getDirection() != LEFT){
 				_2p.setDirection(LEFT);
 			}
-			keyStates['j'] = true;
+			keyStates['y'] = true;
 			break;
-		case('k'):
+		case('u'):
 			if(_2p.getDirection() != DOWN){
 				_2p.setDirection(DOWN);
 			}
-			keyStates['k'] = true;
+			keyStates['u'] = true;
 			break;
-		case('l'):
+		case('i'):
 			if(_2p.getDirection() != RIGHT){
 				_2p.setDirection(RIGHT);
 			}
+			keyStates['i'] = true;
+			break;
+		//1p mirror moving
+		case('g'):
+			keyStates['g'] = true;
+			break;
+		case('v'):
+			keyStates['v'] = true;
+			break;
+		case('b'):
+			keyStates['b'] = true;
+			break;
+		case('n'):
+			keyStates['n'] = true;
+			break;
+		//2p mirror moving
+		case('l'):
 			keyStates['l'] = true;
+			break;
+		case(','):
+			keyStates[','] = true;
+			break;
+		case('.'):
+			keyStates['.'] = true;
+			break;
+		case('/'):
+			keyStates['/'] = true;
+			break;
+		//1p mirror rotate
+		case('f'):
+			keyStates['f'] = true;
+			_1pMirror.rotate(1);
+			break;
+		case('h'):
+			keyStates['h'] = true;
+			_1pMirror.rotate(-1);			
+			break;
+		//2p mirror rotate
+		case('k'):
+			keyStates['k'] = true;
+			_2pMirror.rotate(1);
+			break;
+		case(';'):
+			keyStates[';'] = true;
+			_2pMirror.rotate(-1);
 			break;
 	}
 }
@@ -123,21 +170,47 @@ void KeyboardUp(unsigned char key, int x, int y){
 			keyStates['d'] = false;
 			break;
 		//2p character moving
-		case('i'):
+		case('7'):
 			_2p.setDirection(UP);
+			keyStates['7'] = false;
+			break;
+		case('y'):
+			_2p.setDirection(LEFT);
+			keyStates['y'] = false;
+			break;
+		case('u'):
+			_2p.setDirection(DOWN);
+			keyStates['u'] = false;
+			break;
+		case('i'):
+			_2p.setDirection(RIGHT);
 			keyStates['i'] = false;
 			break;
-		case('j'):
-			_2p.setDirection(LEFT);
-			keyStates['j'] = false;
+		//1p mirror moving
+		case('g'):
+			keyStates['g'] = false;
 			break;
-		case('k'):
-			_2p.setDirection(DOWN);
-			keyStates['k'] = false;
+		case('v'):
+			keyStates['v'] = false;
 			break;
+		case('b'):
+			keyStates['b'] = false;
+			break;
+		case('n'):
+			keyStates['n'] = false;
+			break;
+		//2p mirror moving
 		case('l'):
-			_2p.setDirection(RIGHT);
 			keyStates['l'] = false;
+			break;
+		case(','):
+			keyStates[','] = false;
+			break;
+		case('.'):
+			keyStates['.'] = false;
+			break;
+		case('/'):
+			keyStates['/'] = false;
 			break;
 	}
 }
@@ -150,14 +223,30 @@ void Timer(int){
 		_1p.move(DOWN);
 	if(keyStates['d'] == true)
 		_1p.move(RIGHT);
-	if(keyStates['i'] == true)
+	if(keyStates['7'] == true)
 		_2p.move(UP);
-	if(keyStates['j'] == true)
+	if(keyStates['y'] == true)
 		_2p.move(LEFT);
-	if(keyStates['k'] == true)
+	if(keyStates['u'] == true)
 		_2p.move(DOWN);
-	if(keyStates['l'] == true)
+	if(keyStates['i'] == true)
 		_2p.move(RIGHT);
+	if(keyStates['g'] == true)
+		_1pMirror.move(UP);
+	if(keyStates['v'] == true)
+		_1pMirror.move(LEFT);
+	if(keyStates['b'] == true)
+		_1pMirror.move(DOWN);
+	if(keyStates['n'] == true)
+		_1pMirror.move(RIGHT);
+	if(keyStates['l'] == true)
+		_2pMirror.move(UP);
+	if(keyStates[','] == true)
+		_2pMirror.move(LEFT);
+	if(keyStates['.'] == true)
+		_2pMirror.move(DOWN);
+	if(keyStates['/'] == true)
+		_2pMirror.move(RIGHT);
 	glutPostRedisplay();
 	glutTimerFunc(1000 / FPS, Timer, 0);
 }
