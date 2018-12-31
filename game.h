@@ -34,4 +34,16 @@ class Character{
 		bool moving;
 		void shoot();
 };
+class Bullet{
+	private:
+		double speed;
+		int direction;
+		double power;
+		double position_x;
+		double position_y;
+	public:
+		Bullet(double x, double y);
+		terminate();
+		~Bullet();
+};
 #endif

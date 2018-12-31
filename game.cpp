@@ -48,6 +48,12 @@ void Character::move(int direct){
 		position_x -= speed;
 	}
 }
+void Character::shoot(){
+	
+}
+Bullet::Bullet(double x, double y, int direct){
+	
+}
 Character::~Character(){
 	
 }
