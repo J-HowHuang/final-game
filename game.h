@@ -7,7 +7,7 @@
 #define MAP_HEIGHT 720
 #define CHAR_WIDTH 40
 #define CHAR_HEIGHT 40
-#define FPS 60
+#define FPS 30
 
 #define UP 1
 #define DOWN -1
@@ -28,8 +28,10 @@ class Character{
 		void drawCharacter();
 		int getDirection(){return direction;}
 		void setDirection(int direct){direction = direct;}
-		void moveStep();
+		void move(int direct);
 		double get_x(){return position_x;}
 		double get_y(){return position_y;}
+		bool moving;
+		void shoot();
 };
 #endif

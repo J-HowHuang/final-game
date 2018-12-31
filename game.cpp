@@ -8,6 +8,7 @@ Character::Character(double x, double y, int playerID){
 		id = 1;
 		direction = RIGHT;
 		speed = 10;
+		moving = false;
 	}
 	else if(playerID == 2){
 		position_x = x;
@@ -15,23 +16,35 @@ Character::Character(double x, double y, int playerID){
 		id = 2;
 		direction = LEFT;
 		speed = 10;
+		moving = false;
 	}
 }
 void Character::drawCharacter(){
-	glColor3f(1.0, 0.0, 0.0);
+	if(id == 1)
+		glColor3f(1.0, 0.0, 0.0);
+	else if(id == 2)
+		glColor3f(0.0, 0.0, 1.0);
 	glRectd(position_x - 20, position_y - 20, position_x + 20, position_y + 20);
+	if(direction == UP)
+		glRectd(position_x - 6, position_y + 20, position_x + 6, position_y + 32);
+	if(direction == DOWN)
+		glRectd(position_x + 6, position_y - 20, position_x - 6, position_y - 32);
+	if(direction == RIGHT)
+		glRectd(position_x + 20, position_y - 6, position_x + 32, position_y + 6);
+	if(direction == LEFT)
+		glRectd(position_x - 20, position_y + 6, position_x - 32, position_y - 6);
 }
-void Character::moveStep(){
-	if(direction == UP){
+void Character::move(int direct){
+	if(direct == UP){
 		position_y += speed;
 	}
-	else if(direction == DOWN){
+	else if(direct == DOWN){
 		position_y -= speed;
 	}
-	else if(direction == RIGHT){
+	else if(direct == RIGHT){
 		position_x += speed;
 	}
-	else if(direction == LEFT){
+	else if(direct == LEFT){
 		position_x -= speed;
 	}
 }
