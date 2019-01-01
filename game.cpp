@@ -1,7 +1,57 @@
 #include "game.h"
 #include <GL\glut.h>
 #include <cmath>
-
+Bullet::Bullet(double x, double y, int direction_,int playerID)
+{
+    
+    bullet_size = 12 ;
+    if(playerID == 1)
+    {
+        position_x = x;
+        position_y = y;
+        id = 1;
+        direction = direction_;
+        speed = 10;
+        
+    }
+    else if(playerID == 2)
+    {
+        position_x = x;
+        position_y = y;
+        id = 2;
+        direction = direction_;
+        speed = 10;
+        
+    }
+}
+void Bullet::drawBullet()
+{
+    
+    if(id == 1)
+    {
+        glColor3f(1.0, .0, .0);
+        glRectd(position_x - bullet_size / 2 , position_y - bullet_size / 2, position_x + bullet_size / 2, position_y + bullet_size / 2);
+    }
+    else if(id == 2)
+    {
+        glColor3f(.0, .0, 1.0);
+        glRectd(position_x - bullet_size / 2 , position_y - bullet_size / 2, position_x + bullet_size / 2, position_y + bullet_size / 2);
+    }
+}
+void Bullet::move(){
+    if(direction == UP){
+        position_y += speed;
+    }
+    else if(direction == DOWN){
+        position_y -= speed;
+    }
+    else if(direction == RIGHT){
+        position_x += speed;
+    }
+    else if(direction == LEFT){
+        position_x -= speed;
+    }
+}
 Character::Character(double x, double y, int playerID){
 	if(playerID == 1){
 		position_x = x;
@@ -49,8 +99,17 @@ void Character::move(int direct){
 		position_x -= speed;
 	}
 }
-void Character::shoot(){
-	
+void Character::shoot(int &BulletCount)
+{
+    if(direction == UP)
+        pBullet[id][BulletCount] = new Bullet(position_x,position_y + 26,direction,id);
+    if(direction == DOWN)
+        pBullet[id][BulletCount] = new Bullet(position_x,position_y - 26,direction,id);
+    if(direction == RIGHT)
+        pBullet[id][BulletCount] = new Bullet(position_x + 26,position_y,direction,id);
+    if(direction == LEFT)
+        pBullet[id][BulletCount] = new Bullet(position_x - 26,position_y,direction,id);
+    BulletCount++;
 }
 Mirror::Mirror(double x, double y, int playerID){
 	if(playerID == 1){
@@ -185,4 +244,8 @@ Mirror::~Mirror(){
 }
 Character::~Character(){
 	
+}
+Bullet::~Bullet()
+{
+    
 }

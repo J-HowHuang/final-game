@@ -11,7 +11,15 @@ void Keyboard(unsigned char , int, int );   //??????
 void KeyboardUp(unsigned char, int, int);
 void Display(void);                     //??
 void Timer(int);
-
+void ShootTimer(int);
+//
+const int MAX_BulletOnPlane = 250;
+Bullet ***pBullet = new Bullet **[3];
+pBullet[1] = new Bullet *[MAX_BulletOnPlane]; //這行怪怪的
+pBullet[2] = new Bullet *[MAX_BulletOnPlane]; //這行也怪怪的
+int _1pBulletCount = 0;
+int _2pBulletCount = 0;
+//
 Character _1p(CHAR_WIDTH, CHAR_HEIGHT, 1);
 Character _2p(MAP_WIDTH - CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2);
 Mirror _1pMirror(MAP_WIDTH - CHAR_WIDTH, CHAR_HEIGHT, 1);
@@ -33,6 +41,7 @@ int main(int argc, char** argv)
    glutKeyboardUpFunc(KeyboardUp);
    glutDisplayFunc(Display);
    glutTimerFunc(100, Timer, 0);
+   glutTimerFunc(100, ShootTimer, 0);
    glutMainLoop();
    return 0;
 }
@@ -48,6 +57,14 @@ void Display(void)
    _2p.drawCharacter();
    _1pMirror.drawMirror();
    _2pMirror.drawMirror();
+    for(int i = 0 ; i < _1pBulletCount ; i++)
+    {
+        pBullet[1][i]->drawBullet();
+    }
+    for(int i = 0 ; i < _2pBulletCount ; i++)
+    {
+        pBullet[2][i]->drawBullet();
+    }
    glutSwapBuffers();
 }
 
@@ -148,6 +165,13 @@ void Keyboard(unsigned char key, int x, int y)
 			keyStates[';'] = true;
 			_2pMirror.rotate(-1);
 			break;
+            // shoot
+        case('1'):
+            keyStates['1'] = true;
+            break;
+        case('2'):
+            keyStates['2'] = true;
+            break;
 	}
 }
 void KeyboardUp(unsigned char key, int x, int y){
@@ -212,7 +236,24 @@ void KeyboardUp(unsigned char key, int x, int y){
 		case('/'):
 			keyStates['/'] = false;
 			break;
+        // shoot
+        case('1'):
+            keyStates['1'] = false;
+            break;
+        case('2'):
+            keyStates['2'] = false;
+            break;
 	}
+}
+void ShootTimer(int)
+{
+    if(keyStates['1'] == true)
+        _1p.shoot(_1pBulletCount);
+    
+    if(keyStates['1'] == true)
+        _2p.shoot(_2pBulletCount);
+    glutPostRedisplay();
+    glutTimerFunc(1000 / (FPS * 10), ShootTimer, 0);
 }
 void Timer(int){
 	if(keyStates['w'] == true)
@@ -247,6 +288,14 @@ void Timer(int){
 		_2pMirror.move(DOWN);
 	if(keyStates['/'] == true)
 		_2pMirror.move(RIGHT);
+    for(int i = 0 ; i < _1pBulletCount ; i++)
+    {
+        pBullet[1][i]->move();
+    }
+    for(int i = 0 ; i < _2pBulletCount ; i++)
+    {
+        pBullet[2][i]->move();
+    }
 	glutPostRedisplay();
 	glutTimerFunc(1000 / FPS, Timer, 0);
 }

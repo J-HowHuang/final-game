@@ -17,6 +17,22 @@
 #define DOWN_RIGHT -3
 #define UP_LEFT 4
 #define UP_RIGHT -4
+class Bullet{
+private:
+    double speed;
+    int direction;
+    int id;
+    double power;
+    double position_x;
+    double position_y;
+    int bullet_size;
+public:
+    Bullet(double x, double y,int direction, int playerID);
+    ~Bullet();
+    void drawBullet();
+    void move();
+    //terminate();
+};
 class Character{
 	private:
 		double healthP;
@@ -36,7 +52,7 @@ class Character{
 		double get_x(){return position_x;}
 		double get_y(){return position_y;}
 		bool moving;
-		void shoot();
+		void shoot(int &BulletCount);
 };
 class Mirror{
 	private:
@@ -57,16 +73,5 @@ class Mirror{
 		int getDirection(){return direction;}
 		void setDirection(int direct){direction = direct;}
 };
-class Bullet{
-	private:
-		double speed;
-		int direction;
-		double power;
-		double position_x;
-		double position_y;
-	public:
-		Bullet(double x, double y);
-		terminate();
-		~Bullet();
-};
+
 #endif
