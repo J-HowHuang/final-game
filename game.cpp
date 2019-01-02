@@ -11,8 +11,9 @@ Bullet::Bullet(double x, double y, int direction_,int playerID)
         position_y = y;
         id = 1;
         direction = direction_;
-        speed = 10;
-        
+        speed = 20;
+        attack = 10;
+        live = true;
     }
     else if(playerID == 2)
     {
@@ -20,8 +21,9 @@ Bullet::Bullet(double x, double y, int direction_,int playerID)
         position_y = y;
         id = 2;
         direction = direction_;
-        speed = 10;
-        
+        speed = 20;
+        attack = 10;
+        live = true;
     }
 }
 void Bullet::drawBullet()
@@ -54,20 +56,26 @@ void Bullet::move(){
 }
 Character::Character(double x, double y, int playerID){
 	if(playerID == 1){
+		healthP = 100;
 		position_x = x;
 		position_y = y;
 		id = 1;
 		direction = RIGHT;
 		speed = 10;
 		moving = false;
+		pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
+		bulletCount = 0;
 	}
 	else if(playerID == 2){
+		healthP = 100;
 		position_x = x;
 		position_y = y;
 		id = 2;
 		direction = LEFT;
 		speed = 10;
 		moving = false;
+		pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
+		bulletCount = 0;
 	}
 }
 void Character::drawCharacter(){
@@ -75,6 +83,7 @@ void Character::drawCharacter(){
 		glColor3f(1.0, 0.0, 0.0);
 	else if(id == 2)
 		glColor3f(0.0, 0.0, 1.0);
+	//change number to constant 
 	glRectd(position_x - 20, position_y - 20, position_x + 20, position_y + 20);
 	if(direction == UP)
 		glRectd(position_x - 6, position_y + 20, position_x + 6, position_y + 32);
@@ -99,17 +108,17 @@ void Character::move(int direct){
 		position_x -= speed;
 	}
 }
-void Character::shoot(int &BulletCount)
+void Character::shoot(int BulletCount)
 {
     if(direction == UP)
-        pBullet[id][BulletCount] = new Bullet(position_x,position_y + 26,direction,id);
+        pBullet[BulletCount] = new Bullet(position_x,position_y + 26,direction,id);
     if(direction == DOWN)
-        pBullet[id][BulletCount] = new Bullet(position_x,position_y - 26,direction,id);
+        pBullet[BulletCount] = new Bullet(position_x,position_y - 26,direction,id);
     if(direction == RIGHT)
-        pBullet[id][BulletCount] = new Bullet(position_x + 26,position_y,direction,id);
+        pBullet[BulletCount] = new Bullet(position_x + 26,position_y,direction,id);
     if(direction == LEFT)
-        pBullet[id][BulletCount] = new Bullet(position_x - 26,position_y,direction,id);
-    BulletCount++;
+        pBullet[BulletCount] = new Bullet(position_x - 26,position_y,direction,id);
+    addBulletCount();
 }
 Mirror::Mirror(double x, double y, int playerID){
 	if(playerID == 1){
