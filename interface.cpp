@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <windows.h>
+#include "main.cpp"
 #define START_BUTTON 4
-#define INSTRUCTOR_BUTTON 5
+#define TUTORIAL_BUTTON 5
 #define SETTING_BUTTON 6
 #define EXIT_BUTTON 7
 
@@ -43,8 +44,14 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd , UINT msg , WPARAM wp , LPARAM lp)
 		case WM_COMMAND:
 			switch(wp)
 			{
+				case START_BUTTON:
+					main( , );
+					break ;
+				case TUTORIAL_BUTTON:
+					val = MessageBoxW(hWnd , L"Try attack your enemy by moving the gun and turning the mirror." , L"Tutorial" , MB_OK) ;
+					break ;
 				case EXIT_BUTTON:
-					val = MessageBoxW(hWnd , L"Are you sure ?" , L"Wait!" , MB_YESNO | MB_ICONEXCLAMATION) ;
+					val = MessageBoxW(hWnd , L"Are you sure you want to exit?" , L"Wait!" , MB_YESNO | MB_ICONEXCLAMATION) ;
 					if(val == IDYES)
 					{
 						DestroyWindow(hWnd) ;
@@ -67,7 +74,7 @@ void AddControls(HWND hWnd)
 	hLogo = CreateWindowW(L"Static", NULL , WS_VISIBLE | WS_CHILD | SS_BITMAP , 175 , 50 , 150 , 150 , hWnd , (HMENU)START_BUTTON , NULL , NULL) ;
 	SendMessageW(hLogo , STM_SETIMAGE , IMAGE_BITMAP , (LPARAM)hLogoImage); 
 	CreateWindowW(L"Button", L"START", WS_VISIBLE | WS_CHILD, 175 , 200 , 150 , 38 , hWnd , (HMENU)START_BUTTON , NULL , NULL) ;
-	CreateWindowW(L"Button", L"TUTORIAL" , WS_VISIBLE | WS_CHILD , 175 , 250 , 150 , 38 , hWnd , (HMENU)INSTRUCTOR_BUTTON , NULL , NULL) ;
+	CreateWindowW(L"Button", L"TUTORIAL" , WS_VISIBLE | WS_CHILD , 175 , 250 , 150 , 38 , hWnd , (HMENU)TUTORIAL_BUTTON , NULL , NULL) ;
 	CreateWindowW(L"Button", L"SETTING" , WS_VISIBLE | WS_CHILD , 175 , 300 , 150 , 38 , hWnd , (HMENU)SETTING_BUTTON , NULL , NULL) ;  
 	CreateWindowW(L"Button", L"EXIT" , WS_VISIBLE | WS_CHILD , 175 , 350 , 150 , 38 , hWnd , (HMENU)EXIT_BUTTON , NULL , NULL) ;
 }
