@@ -81,10 +81,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=interface
+FileName=interface.cpp
+CompileCpp=1
 Folder=
-Compile=0
-Link=0
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
