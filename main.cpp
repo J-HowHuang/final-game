@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
+#include <windows.h> 
 #include <GL\glut.h>//??DevC++??????? #include <GL\openglut.h>
 #include <cstring>
 #include <cmath>
