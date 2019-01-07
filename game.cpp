@@ -1,7 +1,7 @@
 #include "game.h"
 #include <GL\glut.h>
 #include <cmath>
-Bullet::Bullet(double x, double y, int direction_,int playerID)
+Bullet::Bullet(double x, double y, double direction_,int playerID)
 {
     
     bullet_size = 12 ;
@@ -11,7 +11,7 @@ Bullet::Bullet(double x, double y, int direction_,int playerID)
         position_y = y;
         id = 1;
         direction = direction_;
-        speed = 20;
+        speed = 15;
         attack = 10;
         live = true;
     }
@@ -21,7 +21,7 @@ Bullet::Bullet(double x, double y, int direction_,int playerID)
         position_y = y;
         id = 2;
         direction = direction_;
-        speed = 20;
+        speed = 15;
         attack = 10;
         live = true;
     }
@@ -41,18 +41,25 @@ void Bullet::drawBullet()
     }
 }
 void Bullet::move(){
-    if(direction == UP){
-        position_y += speed;
-    }
-    else if(direction == DOWN){
-        position_y -= speed;
-    }
-    else if(direction == RIGHT){
-        position_x += speed;
-    }
-    else if(direction == LEFT){
-        position_x -= speed;
-    }
+    position_y += speed * sin(direction);
+    position_x += speed * cos(direction);
+}
+void Bullet::reflect(Mirror& mirr){
+	if(this->OnMirror(position_x, position_y, mirr.get_x(), mirr.get_y(), mirr.getSize(), direction)){
+		direction = 2 * mirr.getDirection() - direction;
+	}
+}
+bool Bullet::OnMirror(int x,int y,int mx,int my, int l,double theta)
+{
+    int DisToVertex = (x - mx) * (x - mx) + (y - my) * (y - my);
+    if(DisToVertex > (l/2) * (l/2))
+        return false;
+    double line = mx + my * tan(theta);
+    double DisToLine = abs(x + y * tan(theta)- line)/sqrt(1 + tan(theta) * tan(theta));
+    if(DisToLine == 0)
+        return true;
+    else
+        return false;
 }
 Character::Character(double x, double y, int playerID){
 	if(playerID == 1){
@@ -61,7 +68,7 @@ Character::Character(double x, double y, int playerID){
 		position_y = y;
 		id = 1;
 		direction = RIGHT;
-		speed = 10;
+		speed = 3;
 		moving = false;
 		pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
 		bulletCount = 0;
@@ -72,7 +79,7 @@ Character::Character(double x, double y, int playerID){
 		position_y = y;
 		id = 2;
 		direction = LEFT;
-		speed = 10;
+		speed = 3;
 		moving = false;
 		pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
 		bulletCount = 0;
@@ -85,57 +92,44 @@ void Character::drawCharacter(){
 		glColor3f(0.0, 0.0, 1.0);
 	//change number to constant 
 	glRectd(position_x - 20, position_y - 20, position_x + 20, position_y + 20);
-	if(direction == UP)
-		glRectd(position_x - 6, position_y + 20, position_x + 6, position_y + 32);
-	if(direction == DOWN)
-		glRectd(position_x + 6, position_y - 20, position_x - 6, position_y - 32);
-	if(direction == RIGHT)
-		glRectd(position_x + 20, position_y - 6, position_x + 32, position_y + 6);
-	if(direction == LEFT)
-		glRectd(position_x - 20, position_y + 6, position_x - 32, position_y - 6);
+	glLoadIdentity();
+	glLineWidth(6);
+	glBegin(GL_LINES);
+		glVertex2f(position_x, position_y);
+		glVertex2f(position_x + cos(direction) * 35, position_y + sin(direction) * 35);
+	glEnd();
 }
-void Character::move(int direct){
-	if(direct == UP){
-		position_y += speed;
-	}
-	else if(direct == DOWN){
-		position_y -= speed;
-	}
-	else if(direct == RIGHT){
-		position_x += speed;
-	}
-	else if(direct == LEFT){
-		position_x -= speed;
-	}
+void Character::move(double direct){
+    position_y += speed * sin(direct);
+    position_x += speed * cos(direct);
 }
 void Character::shoot(int BulletCount)
 {
-    if(direction == UP)
-        pBullet[BulletCount] = new Bullet(position_x,position_y + 26,direction,id);
-    if(direction == DOWN)
-        pBullet[BulletCount] = new Bullet(position_x,position_y - 26,direction,id);
-    if(direction == RIGHT)
-        pBullet[BulletCount] = new Bullet(position_x + 26,position_y,direction,id);
-    if(direction == LEFT)
-        pBullet[BulletCount] = new Bullet(position_x - 26,position_y,direction,id);
+    pBullet[BulletCount] = new Bullet(position_x,position_y,direction,id);
     addBulletCount();
 }
-Mirror::Mirror(double x, double y, int playerID){
+Mirror::Mirror(double x, double y, int playerID, double _size){
 	if(playerID == 1){
 		position_x = x;
 		position_y = y;
 		id = 1;
 		direction = UP_LEFT;
-		speed = 10;
+		speed = 3;
+		angV = PI / FPS;
 		moving = false;
+		reflectable = true;
+		size = _size;
 	}
 	else if(playerID == 2){
 		position_x = x;
 		position_y = y;
 		id = 2;
 		direction = DOWN_RIGHT;
-		speed = 10;
+		speed = 3;
+		angV = PI / FPS;
 		moving = false;
+		reflectable = true;
+		size = _size;
 	}
 }
 void Mirror::drawMirror(){
@@ -143,109 +137,27 @@ void Mirror::drawMirror(){
 		glColor3f(1, 0, 0);
 	else if(id == 2)
 		glColor3f(0, 0, 1);
-	if(direction == UP_RIGHT){
-		glLineWidth(3 * sqrt(2));
-			glBegin(GL_LINES);
-				glVertex2f(position_x - 20, position_y + 20);
-				glVertex2f(position_x + 20, position_y - 20);
-			glEnd();
-		glLineWidth(3);
-			glBegin(GL_LINES);
-				glVertex2f(position_x + 20, position_y - 20);
-				glVertex2f(position_x - 20, position_y - 20);
-				glVertex2f(position_x - 20, position_y - 20);
-				glVertex2f(position_x - 20, position_y + 20);
-			glEnd();
-	}
-	else if(direction == UP_LEFT){
-		glLineWidth(3 * sqrt(2));
-			glBegin(GL_LINES);
-				glVertex2f(position_x + 20, position_y + 20);
-				glVertex2f(position_x - 20, position_y - 20);
-			glEnd();
-		glLineWidth(3);
-			glBegin(GL_LINES);
-				glVertex2f(position_x + 20, position_y + 20);
-				glVertex2f(position_x + 20, position_y - 20);
-				glVertex2f(position_x + 20, position_y - 20);
-				glVertex2f(position_x - 20, position_y - 20);
-			glEnd();
-	}
-	else if(direction == DOWN_RIGHT){
-		glLineWidth(3 * sqrt(2));
-			glBegin(GL_LINES);
-				glVertex2f(position_x + 20, position_y + 20);
-				glVertex2f(position_x - 20, position_y - 20);
-			glEnd();
-		glLineWidth(3);
-			glBegin(GL_LINES);
-				glVertex2f(position_x + 20, position_y + 20);
-				glVertex2f(position_x - 20, position_y + 20);
-				glVertex2f(position_x - 20, position_y + 20);
-				glVertex2f(position_x - 20, position_y - 20);
-			glEnd();
-	}
-	else if(direction == DOWN_LEFT){
-		glLineWidth(3 * sqrt(2));
-			glBegin(GL_LINES);
-				glVertex2f(position_x - 20, position_y + 20);
-				glVertex2f(position_x + 20, position_y - 20);
-			glEnd();
-		glLineWidth(3);
-			glBegin(GL_LINES);
-				glVertex2f(position_x + 20, position_y - 20);
-				glVertex2f(position_x + 20, position_y + 20);
-				glVertex2f(position_x + 20, position_y + 20);
-				glVertex2f(position_x - 20, position_y + 20);
-			glEnd();
-	}
+	else
+		glColor3f(0, 0, 0);
+		
+	glLineWidth(3 * sqrt(2));
+		glBegin(GL_LINES);
+			glVertex2f(position_x + size * cos(direction - PI / 2), position_y + size * sin(direction - PI / 2));
+			glVertex2f(position_x - size * cos(direction - PI / 2), position_y - size * sin(direction - PI / 2));
+		glEnd();
+
+	
 }
-void Mirror::move(int direct){
-	if(direct == UP){
-		position_y += speed;
-	}
-	else if(direct == DOWN){
-		position_y -= speed;
-	}
-	else if(direct == RIGHT){
-		position_x += speed;
-	}
-	else if(direct == LEFT){
-		position_x -= speed;
-	}
+void Mirror::move(double direct){
+    position_y += speed * sin(direct);
+    position_x += speed * cos(direct);
 }
 void Mirror::rotate(int tao){
 	if(tao > 0){
-		switch(direction){
-			case(UP_LEFT):
-				direction = DOWN_LEFT;
-				break;
-			case(DOWN_LEFT):
-				direction = DOWN_RIGHT;
-				break;
-			case(DOWN_RIGHT):
-				direction = UP_RIGHT;
-				break;
-			case(UP_RIGHT):
-				direction = UP_LEFT;
-				break;
-		}
+		direction += angV;
 	}
 	if(tao < 0){
-		switch(direction){
-			case(UP_LEFT):
-				direction = UP_RIGHT;
-				break;
-			case(DOWN_LEFT):
-				direction = UP_LEFT;
-				break;
-			case(DOWN_RIGHT):
-				direction = DOWN_LEFT;
-				break;
-			case(UP_RIGHT):
-				direction = DOWN_RIGHT;
-				break;
-		}
+		direction -= angV;
 	}
 }
 Mirror::~Mirror(){
@@ -258,3 +170,4 @@ Bullet::~Bullet()
 {
     
 }
+

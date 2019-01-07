@@ -14,10 +14,10 @@ void Display(void);                     //??
 void Timer(int);
 void ShootTimer(int);
 //
-Character _1p(CHAR_WIDTH, CHAR_HEIGHT, 1);
-Character _2p(MAP_WIDTH - CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2);
-Mirror _1pMirror(MAP_WIDTH - CHAR_WIDTH, CHAR_HEIGHT, 1);
-Mirror _2pMirror(CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2);
+Character _1p(CHAR_WIDTH, CHAR_HEIGHT, 0, 1);
+Character _2p(MAP_WIDTH - CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, PI, 2);
+Mirror _1pMirror(MAP_WIDTH - CHAR_WIDTH, CHAR_HEIGHT, 1, 50);
+Mirror _2pMirror(CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2, 50);
 bool keyStates[256] = {0};
 const char GAME_NAME[] = {"awesome game"};
 int main(int argc, char** argv)
@@ -143,23 +143,18 @@ void Keyboard(unsigned char key, int x, int y)
 		case('/'):
 			keyStates['/'] = true;
 			break;
-		//1p mirror rotate
+		// mirror rotate
 		case('f'):
 			keyStates['f'] = true;
-			_1pMirror.rotate(1);
 			break;
 		case('h'):
-			keyStates['h'] = true;
-			_1pMirror.rotate(-1);			
+			keyStates['h'] = true;		
 			break;
-		//2p mirror rotate
 		case('k'):
 			keyStates['k'] = true;
-			_2pMirror.rotate(1);
 			break;
 		case(';'):
 			keyStates[';'] = true;
-			_2pMirror.rotate(-1);
 			break;
             // shoot
         case('1'):
@@ -236,6 +231,19 @@ void KeyboardUp(unsigned char key, int x, int y){
 		case('/'):
 			keyStates['/'] = false;
 			break;
+		//rotate
+		case('f'):
+			keyStates['f'] = false;
+			break;
+		case('h'):
+			keyStates['h'] = false;
+			break;
+		case('k'):
+			keyStates['k'] = false;
+			break;
+		case(';'):
+			keyStates[';'] = false;
+			break;
         // shoot
         case('1'):
             keyStates['1'] = false;
@@ -288,6 +296,15 @@ void Timer(int){
 		_2pMirror.move(DOWN);
 	if(keyStates['/'] == true)
 		_2pMirror.move(RIGHT);
+	if(keyStates['f'] == true)
+		_1pMirror.rotate(1);
+	if(keyStates['h'] == true)
+		_1pMirror.rotate(-1);
+	if(keyStates['k'] == true)
+		_1pMirror.rotate(1);
+	if(keyStates[';'] == true)
+		_1pMirror.rotate(-1);
+	
 	if(_1p.get_x() > MAP_WIDTH)
 		_1p.set_x(MAP_WIDTH);
 	if(_1p.get_x() < 0)
@@ -303,10 +320,29 @@ void Timer(int){
 	if(_2p.get_y() > MAP_HEIGHT)
 		_2p.set_y(MAP_HEIGHT);
 	if(_2p.get_y() < 0)
-		_2p.set_y(0);	
+		_2p.set_y(0);
+	
+	if(_1pMirror.get_x() > MAP_WIDTH)
+		_1pMirror.set_x(MAP_WIDTH);
+	if(_1pMirror.get_x() < 0)
+		_1pMirror.set_x(0);
+	if(_1pMirror.get_y() > MAP_HEIGHT)
+		_1pMirror.set_y(MAP_HEIGHT);
+	if(_1pMirror.get_y() < 0)
+		_1pMirror.set_y(0);
+	if(_2pMirror.get_x() > MAP_WIDTH)
+		_2pMirror.set_x(MAP_WIDTH);
+	if(_2pMirror.get_x() < 0)
+		_2pMirror.set_x(0);
+	if(_2pMirror.get_y() > MAP_HEIGHT)
+		_2pMirror.set_y(MAP_HEIGHT);
+	if(_2pMirror.get_y() < 0)
+		_2pMirror.set_y(0);	
     for(int i = 0 ; i < _1p.getBulletCount(); i++)
     {
         _1p.pBullet[i]->move();
+        _1p.pBullet[i]->reflect(_1pMirror);
+        _1p.pBullet[i]->reflect(_2pMirror);
         if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
         	if(_1p.pBullet[i]->live){
 				_2p.healthP -= _1p.pBullet[i]->get_atk();
@@ -318,6 +354,8 @@ void Timer(int){
     for(int i = 0 ; i < _2p.getBulletCount(); i++)
     {
         _2p.pBullet[i]->move();
+        _2p.pBullet[i]->reflect(_1pMirror);
+        _2p.pBullet[i]->reflect(_2pMirror);
         if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
         	if(_2p.pBullet[i]->live){
 				_1p.healthP -= _2p.pBullet[i]->get_atk();
@@ -326,6 +364,7 @@ void Timer(int){
 			}
 		}
     }
+    
 	glutPostRedisplay();
 	glutTimerFunc(1000 / FPS, Timer, 0);
 }
