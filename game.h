@@ -32,7 +32,7 @@ class Mirror{
 		double angV;
 		double size;
 	public:
-		Mirror(double x, double y, int playerID, double size);
+		Mirror(double x, double y, int playerID, double size, double direction = 0);
 		~Mirror();
 		void drawMirror();
 		void move(double direct);
@@ -78,12 +78,14 @@ class Character{
 		double position_x;
 		double position_y;
 		int bulletCount;
+		double angV;
 	public:
 		Character(double x, double y, int playerID);
 		~Character();
 		void drawCharacter();
 		double getDirection(){return direction;}
 		void setDirection(double direct){direction = direct;}
+		void rotate(int tao);
 		void move(double direct);
 		double get_x(){return position_x;}
 		void set_x(double x){position_x = x;}

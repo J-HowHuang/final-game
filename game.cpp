@@ -11,8 +11,8 @@ Bullet::Bullet(double x, double y, double direction_,int playerID)
         position_y = y;
         id = 1;
         direction = direction_;
-        speed = 15;
-        attack = 10;
+        speed = 7;
+        attack = 1;
         live = true;
     }
     else if(playerID == 2)
@@ -21,8 +21,8 @@ Bullet::Bullet(double x, double y, double direction_,int playerID)
         position_y = y;
         id = 2;
         direction = direction_;
-        speed = 15;
-        attack = 10;
+        speed = 7;
+        attack = 1;
         live = true;
     }
 }
@@ -45,18 +45,18 @@ void Bullet::move(){
     position_x += speed * cos(direction);
 }
 void Bullet::reflect(Mirror& mirr){
-	if(this->OnMirror(position_x, position_y, mirr.get_x(), mirr.get_y(), mirr.getSize(), direction)){
-		direction = 2 * mirr.getDirection() - direction;
+	if(this->OnMirror(position_x, position_y, mirr.get_x(), mirr.get_y(), mirr.getSize(), mirr.getDirection())){
+		direction = 2 * mirr.getDirection() - direction + PI;
 	}
 }
-bool Bullet::OnMirror(int x,int y,int mx,int my, int l,double theta)
+bool Bullet::OnMirror(int x,int y,int mx,int my, int l, double theta)
 {
     int DisToVertex = (x - mx) * (x - mx) + (y - my) * (y - my);
     if(DisToVertex > (l/2) * (l/2))
         return false;
     double line = mx + my * tan(theta);
     double DisToLine = abs(x + y * tan(theta)- line)/sqrt(1 + tan(theta) * tan(theta));
-    if(DisToLine == 0)
+    if(abs(DisToLine) < speed / 2)
         return true;
     else
         return false;
@@ -68,7 +68,8 @@ Character::Character(double x, double y, int playerID){
 		position_y = y;
 		id = 1;
 		direction = RIGHT;
-		speed = 3;
+		speed = 0;
+		angV = PI / FPS / 2;
 		moving = false;
 		pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
 		bulletCount = 0;
@@ -79,7 +80,8 @@ Character::Character(double x, double y, int playerID){
 		position_y = y;
 		id = 2;
 		direction = LEFT;
-		speed = 3;
+		speed = 0;
+		angV = PI / FPS / 2;
 		moving = false;
 		pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
 		bulletCount = 0;
@@ -103,19 +105,27 @@ void Character::move(double direct){
     position_y += speed * sin(direct);
     position_x += speed * cos(direct);
 }
+void Character::rotate(int tao){
+	if(tao > 0){
+		direction += angV;
+	}
+	if(tao < 0){
+		direction -= angV;
+	}
+}
 void Character::shoot(int BulletCount)
 {
     pBullet[BulletCount] = new Bullet(position_x,position_y,direction,id);
     addBulletCount();
 }
-Mirror::Mirror(double x, double y, int playerID, double _size){
+Mirror::Mirror(double x, double y, int playerID, double _size, double _direction){
 	if(playerID == 1){
 		position_x = x;
 		position_y = y;
 		id = 1;
 		direction = UP_LEFT;
 		speed = 3;
-		angV = PI / FPS;
+		angV = PI / FPS / 2;
 		moving = false;
 		reflectable = true;
 		size = _size;
@@ -126,7 +136,18 @@ Mirror::Mirror(double x, double y, int playerID, double _size){
 		id = 2;
 		direction = DOWN_RIGHT;
 		speed = 3;
-		angV = PI / FPS;
+		angV = PI / FPS / 2;
+		moving = false;
+		reflectable = true;
+		size = _size;
+	}
+	else{
+		position_x = x;
+		position_y = y;
+		id = 0;
+		direction = _direction;
+		speed = 0;
+		angV = 0;
 		moving = false;
 		reflectable = true;
 		size = _size;

@@ -15,10 +15,14 @@ void Display(void);                     //??
 void Timer(int);
 void ShootTimer(int);
 //
-Character _1p(CHAR_WIDTH, CHAR_HEIGHT, 0, 1);
-Character _2p(MAP_WIDTH - CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, PI, 2);
+Character _1p(CHAR_WIDTH, CHAR_HEIGHT, 1);
+Character _2p(MAP_WIDTH - CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2);
 Mirror _1pMirror(MAP_WIDTH - CHAR_WIDTH, CHAR_HEIGHT, 1, 50);
 Mirror _2pMirror(CHAR_WIDTH, MAP_HEIGHT - CHAR_HEIGHT, 2, 50);
+Mirror margin1(MAP_WIDTH / 2, 3, 0, MAP_WIDTH, UP);
+Mirror margin2(MAP_WIDTH / 2, MAP_HEIGHT - 3, 0, MAP_WIDTH, DOWN);
+Mirror margin3(3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, LEFT);
+Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
 bool keyStates[256] = {0};
 const char GAME_NAME[] = {"awesome game"};
 int main(int argc, char** argv)
@@ -52,6 +56,10 @@ void Display(void)
 	_2p.drawCharacter();
 	_1pMirror.drawMirror();
 	_2pMirror.drawMirror();
+	margin1.drawMirror();
+	margin2.drawMirror();
+	margin3.drawMirror();
+	margin4.drawMirror();
 	for(int i = 0 ; i < _1p.getBulletCount() ; i++)
 	{
 		if(_1p.pBullet[i]->live)
@@ -69,7 +77,7 @@ void Keyboard(unsigned char key, int x, int y)
 {
 	switch(key){
 		//1p character moving
-		case('w'):
+	/*	case('w'):
 			if(_1p.getDirection() != UP){
 				_1p.setDirection(UP);
 			}
@@ -117,63 +125,27 @@ void Keyboard(unsigned char key, int x, int y)
 				_2p.setDirection(RIGHT);
 			}
 			keyStates['i'] = true;
-			break;
-		//1p mirror moving
-		case('g'):
-			keyStates['g'] = true;
-			break;
-		case('v'):
-			keyStates['v'] = true;
-			break;
-		case('b'):
-			keyStates['b'] = true;
-			break;
-		case('n'):
-			keyStates['n'] = true;
-			break;
-		//2p mirror moving
-		case('l'):
-			keyStates['l'] = true;
-			break;
-		case(','):
-			keyStates[','] = true;
-			break;
-		case('.'):
-			keyStates['.'] = true;
-			break;
-		case('/'):
-			keyStates['/'] = true;
-			break;
-		// mirror rotate
-		case('f'):
-			keyStates['f'] = true;
-			break;
-		case('h'):
-			keyStates['h'] = true;		
-			break;
-		case('k'):
-			keyStates['k'] = true;
-			break;
-		case(';'):
-			keyStates[';'] = true;
-			break;
-            // shoot
-        case('1'):
+			break;*/
+        // shoot
+        case('w'):
         	_1p.shoot(_1p.getBulletCount());
 		    glutPostRedisplay();
-            keyStates['1'] = true;
+            keyStates['w'] = true;
             break;
-        case('p'):
+        case('7'):
         	_2p.shoot(_2p.getBulletCount());
 		    glutPostRedisplay();
-            keyStates['p'] = true;
+            keyStates['7'] = true;
             break;
+        default:
+        	keyStates[key] = true;
+        	break;
 	}
 }
 void KeyboardUp(unsigned char key, int x, int y){
 	switch(key){
 		//1p character moving
-		case('w'):
+	/*	case('w'):
 			_1p.setDirection(UP);
 			keyStates['w'] = false;
 			break;
@@ -205,53 +177,10 @@ void KeyboardUp(unsigned char key, int x, int y){
 		case('i'):
 			_2p.setDirection(RIGHT);
 			keyStates['i'] = false;
+			break;*/
+		default:
+			keyStates[key] = false;
 			break;
-		//1p mirror moving
-		case('g'):
-			keyStates['g'] = false;
-			break;
-		case('v'):
-			keyStates['v'] = false;
-			break;
-		case('b'):
-			keyStates['b'] = false;
-			break;
-		case('n'):
-			keyStates['n'] = false;
-			break;
-		//2p mirror moving
-		case('l'):
-			keyStates['l'] = false;
-			break;
-		case(','):
-			keyStates[','] = false;
-			break;
-		case('.'):
-			keyStates['.'] = false;
-			break;
-		case('/'):
-			keyStates['/'] = false;
-			break;
-		//rotate
-		case('f'):
-			keyStates['f'] = false;
-			break;
-		case('h'):
-			keyStates['h'] = false;
-			break;
-		case('k'):
-			keyStates['k'] = false;
-			break;
-		case(';'):
-			keyStates[';'] = false;
-			break;
-        // shoot
-        case('1'):
-            keyStates['1'] = false;
-            break;
-        case('p'):
-            keyStates['p'] = false;
-            break;
 	}
 }
 void ShootTimer(int)
@@ -265,7 +194,7 @@ void ShootTimer(int)
 	glutTimerFunc(1000 / DEFAULT_SHOOTING_SPEED, ShootTimer, 0);
 }
 void Timer(int){
-	if(keyStates['w'] == true)
+/*	if(keyStates['w'] == true)
 		_1p.move(UP);
 	if(keyStates['a'] == true)
 		_1p.move(LEFT);
@@ -280,7 +209,7 @@ void Timer(int){
 	if(keyStates['u'] == true)
 		_2p.move(DOWN);
 	if(keyStates['i'] == true)
-		_2p.move(RIGHT);
+		_2p.move(RIGHT);*/
 	if(keyStates['g'] == true)
 		_1pMirror.move(UP);
 	if(keyStates['v'] == true)
@@ -302,10 +231,17 @@ void Timer(int){
 	if(keyStates['h'] == true)
 		_1pMirror.rotate(-1);
 	if(keyStates['k'] == true)
-		_1pMirror.rotate(1);
+		_2pMirror.rotate(1);
 	if(keyStates[';'] == true)
-		_1pMirror.rotate(-1);
-	
+		_2pMirror.rotate(-1);
+	if(keyStates['q'] == true)
+		_1p.rotate(1);
+	if(keyStates['e'] == true)
+		_1p.rotate(-1);
+	if(keyStates['6'] == true)
+		_2p.rotate(1);
+	if(keyStates['8'] == true)
+		_2p.rotate(-1);
 	if(_1p.get_x() > MAP_WIDTH)
 		_1p.set_x(MAP_WIDTH);
 	if(_1p.get_x() < 0)
@@ -344,6 +280,10 @@ void Timer(int){
         _1p.pBullet[i]->move();
         _1p.pBullet[i]->reflect(_1pMirror);
         _1p.pBullet[i]->reflect(_2pMirror);
+        _1p.pBullet[i]->reflect(margin1);
+        _1p.pBullet[i]->reflect(margin2);
+        _1p.pBullet[i]->reflect(margin3);
+        _1p.pBullet[i]->reflect(margin4);
         if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
         	if(_1p.pBullet[i]->live){
 				_2p.healthP -= _1p.pBullet[i]->get_atk();
@@ -357,6 +297,10 @@ void Timer(int){
         _2p.pBullet[i]->move();
         _2p.pBullet[i]->reflect(_1pMirror);
         _2p.pBullet[i]->reflect(_2pMirror);
+        _2p.pBullet[i]->reflect(margin1);
+        _2p.pBullet[i]->reflect(margin2);
+        _2p.pBullet[i]->reflect(margin3);
+        _2p.pBullet[i]->reflect(margin4);
         if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
         	if(_2p.pBullet[i]->live){
 				_1p.healthP -= _2p.pBullet[i]->get_atk();
