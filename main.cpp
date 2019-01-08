@@ -42,6 +42,7 @@ int main(int argc, char** argv)
 	glDisable(GL_DEPTH_TEST);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     //?????????Callback??
     glutReshapeFunc(WindowSize);
     glutIgnoreKeyRepeat(1);
@@ -56,6 +57,8 @@ int main(int argc, char** argv)
 =======
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 	//?????????Callback??
 	glutReshapeFunc(WindowSize);
 	glutIgnoreKeyRepeat(1);
@@ -67,6 +70,9 @@ int main(int argc, char** argv)
 	glutMainLoop();
 	return 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
@@ -201,10 +207,13 @@ void KeyboardUp(unsigned char key, int x, int y){
 =======
 		keyStates[key] = false;
 	}
+<<<<<<< HEAD
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 =======
 		keyStates[key] = false;
 	}
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 }
 void ShootTimer(int)
@@ -217,6 +226,7 @@ void ShootTimer(int)
 	glutPostRedisplay();
 	glutTimerFunc(1000 / DEFAULT_SHOOTING_SPEED, ShootTimer, 0);
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 void Timer(int)
@@ -378,6 +388,8 @@ void Timer(int)
 =======
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 void Timer(int){
 	if(mode == GAME_MODE_1 && !gamePause){
 		if(keyStates['g'] == true)
@@ -446,6 +458,9 @@ void Timer(int){
 		if(_2pMirror.get_y() < 0)
 			_2pMirror.set_y(0);	
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
@@ -460,6 +475,7 @@ void Timer(int){
 	        _1p.pBullet[i]->reflect(margin4);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	        _1p.pBullet[i]->getInObstacle(*tree[1]);
 	        _1p.pBullet[i]->getInObstacle(*tree[2]);
 	        if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
@@ -472,6 +488,8 @@ void Timer(int){
 =======
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 	        if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
 	        	if(_1p.pBullet[i]->live){
 					_2p.healthP -= _1p.pBullet[i]->get_atk();
@@ -480,6 +498,9 @@ void Timer(int){
 				}
 			}
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
@@ -493,6 +514,7 @@ void Timer(int){
 	        _2p.pBullet[i]->reflect(margin2);
 	        _2p.pBullet[i]->reflect(margin3);
 	        _2p.pBullet[i]->reflect(margin4);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	        _2p.pBullet[i]->getInObstacle(*tree[1]);
@@ -530,6 +552,8 @@ void Timer(int){
 =======
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 	        if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
 	        	if(_2p.pBullet[i]->live){
 					_1p.healthP -= _2p.pBullet[i]->get_atk();
@@ -544,6 +568,9 @@ void Timer(int){
 	glutPostRedisplay();
 	glutTimerFunc(1000 / FPS, Timer, 0);
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
+=======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
