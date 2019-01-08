@@ -26,10 +26,13 @@
 #define UP_RIGHT 3 * PI / 4
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define START_BUTTON_LEFT MAP_WIDTH / 2 - 172
 #define START_BUTTON_RIGHT = MAP_WIDTH / 2 + 172;
 #define START_BUTTON_UP  MAP_HEIGHT / 2 + 64;
 #define START_BUTTON_BOTy  MAP_HEIGHT / 2 - 64;
+=======
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 =======
 >>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 #define GAME_MENU 1
