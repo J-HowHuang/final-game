@@ -7,7 +7,7 @@
 #define MAP_HEIGHT 720
 #define CHAR_WIDTH 60
 #define CHAR_HEIGHT 60
-#define CANNON_LENGTH 45
+#define CANNON_LENGTH 60
 #define MIRROR_SIZE 60
 #define MIRROR_WIDTH 12
 #define FPS 120
@@ -115,6 +115,7 @@ public:
     ~Character();
     void drawCharacter();
     int bulletCount;
+    int nowbulletCount;
     double getDirection(){return direction;}
     void setDirection(double direct){direction = direct;}
     void setSpeed(double spd){speed = spd;}
@@ -125,7 +126,7 @@ public:
     void set_y(double y){position_y = y;}
     double get_y(){return position_y;}
     int getBulletCount(){return bulletCount;}
-    void addBulletCount(){bulletCount++;}
+    void addBulletCount(){bulletCount++;nowbulletCount++;}
     bool moving;
     void shoot(int BulletCount);
     double healthP;

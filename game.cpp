@@ -119,6 +119,7 @@ Character::Character(double x, double y, int playerID){
         moving = false;
         pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
         bulletCount = 0;
+        nowbulletCount = 0;
         count = 0;
     }
     else if(playerID == 2){
@@ -132,6 +133,7 @@ Character::Character(double x, double y, int playerID){
         moving = false;
         pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
         bulletCount = 0;
+        nowbulletCount = 0;
         count = 0;
     }
 }
@@ -147,7 +149,7 @@ void Character::drawCharacter(){
 	glLineWidth(6);
 	glBegin(GL_LINES);
 		glVertex2f(position_x, position_y);
-		glVertex2f(position_x + cos(direction) * CANNON_LENGTH, position_y + sin(direction) * CANNON_LENGTH);
+		glVertex2f(position_x + cos(direction) * 60, position_y + sin(direction) * 60);
 	glEnd();
 }
 void Character::move(){
@@ -166,7 +168,7 @@ void Character::rotate(int tao){
 }
 void Character::shoot(int BulletCount)
 {
-	if(bulletCount >= 6){
+	if(nowbulletCount >= 6){
 		return;
 	}
     pBullet[BulletCount] = new Bullet(position_x,position_y,direction,id);
@@ -180,7 +182,7 @@ void Character::moveTowardMirror(Mirror player)
     
     double distanceSquare = ( aim_position_x - position_x ) * ( aim_position_x - position_x ) + ( aim_position_y - position_y ) * ( aim_position_y - position_y );
     speed = 15;
-    direction = 
+    direction = atan((player.get_y() / position_y) / (player.get_x() / position_x));
     times = sqrt(distanceSquare)/speed + 1;
 }
 
