@@ -23,10 +23,14 @@ Mirror margin1(MAP_WIDTH / 2, 3, 0, MAP_WIDTH, UP);
 Mirror margin2(MAP_WIDTH / 2, MAP_HEIGHT - 3, 0, MAP_WIDTH, DOWN);
 Mirror margin3(3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, LEFT);
 Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
+Obstacle **tree = new Obstacle *[5];
+int tree_count = 2;
 bool keyStates[256] = {0};
 const char GAME_NAME[] = {"awesome game"};
 int main(int argc, char** argv)
 {
+    tree[1] = new Obstacle(500,360,500 + OBSTACLE_WIDTH,360 + OBSTACLE_WIDTH);
+    tree[2] = new Obstacle(200,100,200 + OBSTACLE_WIDTH,100 + OBSTACLE_WIDTH);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1080,720);         //????
@@ -54,12 +58,15 @@ void Display(void)
     gluLookAt(0,0,10.0f,0,0,0,0,1,0);   //should be modified
     _1p.drawCharacter();
     _2p.drawCharacter();
+    tree[1]->drawObstacle();
+    tree[2]->drawObstacle();
     _1pMirror.drawMirror();
     _2pMirror.drawMirror();
     margin1.drawMirror();
     margin2.drawMirror();
     margin3.drawMirror();
     margin4.drawMirror();
+    
     for(int i = 0 ; i < _1p.getBulletCount() ; i++)
     {
         if(_1p.pBullet[i]->live)
@@ -70,6 +77,7 @@ void Display(void)
         if(_2p.pBullet[i]->live)
             _2p.pBullet[i]->drawBullet();
     }
+    
     glutSwapBuffers();
 }
 
@@ -221,22 +229,73 @@ void Timer(int){
      _2p.move(DOWN);
      if(keyStates['i'] == true)
      _2p.move(RIGHT);*/
+    
     if(keyStates['g'] == true)
+    {
         _1pMirror.move(UP);
+        if(_1pMirror.disToObstacle(*tree[1]))
+            _1pMirror.move(DOWN);
+        else if(_1pMirror.disToObstacle(*tree[2]))
+            _1pMirror.move(DOWN);
+    }
+    
     if(keyStates['v'] == true)
+    {
         _1pMirror.move(LEFT);
+        if(_1pMirror.disToObstacle(*tree[1]))
+            _1pMirror.move(RIGHT);
+        else if(_1pMirror.disToObstacle(*tree[2]))
+            _1pMirror.move(RIGHT);
+    }
     if(keyStates['b'] == true)
+    {
         _1pMirror.move(DOWN);
+        if(_1pMirror.disToObstacle(*tree[1]))
+            _1pMirror.move(UP);
+        else if(_1pMirror.disToObstacle(*tree[2]))
+            _1pMirror.move(UP);
+    }
     if(keyStates['n'] == true)
+    {
         _1pMirror.move(RIGHT);
+        if(_1pMirror.disToObstacle(*tree[1]))
+            _1pMirror.move(LEFT);
+        else if(_1pMirror.disToObstacle(*tree[2]))
+            _1pMirror.move(LEFT);
+    }
     if(keyStates['l'] == true)
+    {
         _2pMirror.move(UP);
+        if(_2pMirror.disToObstacle(*tree[1]))
+            _2pMirror.move(DOWN);
+        else if(_2pMirror.disToObstacle(*tree[2]))
+            _2pMirror.move(DOWN);
+    }
+    
     if(keyStates[','] == true)
+    {
         _2pMirror.move(LEFT);
+        if(_2pMirror.disToObstacle(*tree[1]))
+            _2pMirror.move(RIGHT);
+        else if(_2pMirror.disToObstacle(*tree[2]))
+            _2pMirror.move(RIGHT);
+    }
     if(keyStates['.'] == true)
+    {
         _2pMirror.move(DOWN);
+        if(_2pMirror.disToObstacle(*tree[1]))
+            _2pMirror.move(UP);
+        else if(_2pMirror.disToObstacle(*tree[2]))
+            _2pMirror.move(UP);
+    }
     if(keyStates['/'] == true)
+    {
         _2pMirror.move(RIGHT);
+        if(_2pMirror.disToObstacle(*tree[1]))
+            _2pMirror.move(LEFT);
+        else if(_2pMirror.disToObstacle(*tree[2]))
+            _2pMirror.move(LEFT);
+    }
     if(keyStates['f'] == true)
         _1pMirror.rotate(1);
     if(keyStates['h'] == true)
@@ -310,6 +369,20 @@ void Timer(int){
         }
     }
     //
+    /*
+     if(_1p.disToObstacle(tree1))
+     {
+     if(_1p.get_x() > tree1.coodLD_x - 1 && (_1p.get_y() <= tree1.coodRT_y + 1 && _1p.get_y() >= tree1.coodLD_y - 1))
+     _1p.set_x(tree1.coodLD_x - 1);
+     if(_1p.get_y() > tree1.coodLD_y - 1 && (_1p.get_x() <= tree1.coodRT_x + 1 && _1p.get_x() >= tree1.coodLD_x - 1))
+     _1p.set_y(tree1.coodLD_y - 1);
+     if(_1p.get_x() < tree1.coodRT_x + 1 && (_1p.get_y() >= tree1.coodLD_y - 1 && _1p.get_y() <= tree1.coodRT_y + 1))
+     _1p.set_x(tree1.coodRT_x + 1);
+     if(_1p.get_y() < tree1.coodRT_y + 1 && (_1p.get_x() >= tree1.coodLD_x - 1 && _1p.get_x() <= tree1.coodRT_x + 1))
+     _1p.set_y(tree1.coodRT_y + 1);
+     }
+     */
+    //
     for(int i = 0 ; i < _1p.getBulletCount(); i++)
     {
         _1p.pBullet[i]->move();
@@ -319,6 +392,8 @@ void Timer(int){
         _1p.pBullet[i]->reflect(margin2);
         _1p.pBullet[i]->reflect(margin3);
         _1p.pBullet[i]->reflect(margin4);
+        _1p.pBullet[i]->getInObstacle(*tree[1]);
+        _1p.pBullet[i]->getInObstacle(*tree[2]);
         if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
             if(_1p.pBullet[i]->live){
                 _2p.healthP -= _1p.pBullet[i]->get_atk();
@@ -336,6 +411,8 @@ void Timer(int){
         _2p.pBullet[i]->reflect(margin2);
         _2p.pBullet[i]->reflect(margin3);
         _2p.pBullet[i]->reflect(margin4);
+        _2p.pBullet[i]->getInObstacle(*tree[1]);
+        _2p.pBullet[i]->getInObstacle(*tree[2]);
         if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
             if(_2p.pBullet[i]->live){
                 _1p.healthP -= _2p.pBullet[i]->get_atk();

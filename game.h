@@ -21,7 +21,20 @@
 #define DOWN_RIGHT -PI / 4
 #define UP_LEFT PI / 4
 #define UP_RIGHT 3 * PI / 4
-
+#define OBSTACLE_WIDTH  100
+class Obstacle
+{
+private:
+    
+public:
+    double coodLD_x;
+    double coodLD_y;
+    double coodRT_x;
+    double coodRT_y;
+    Obstacle(double LD_x,double LD_y,double RT_x,double RT_y);
+    ~Obstacle();
+    void drawObstacle();
+};
 class Mirror{
 private:
     double position_x;
@@ -46,7 +59,7 @@ public:
     double getDirection(){return direction;}
     void setDirection(double direct){direction = direct;}
     double getSize(){return size;}
-    
+    bool disToObstacle(Obstacle OB);
 };
 class Bullet{
 private:
@@ -70,6 +83,7 @@ public:
     void reflect(Mirror& mirr);// here
     bool live;
     void setbulletsize(int bs){bullet_size = bs;}
+    void getInObstacle(Obstacle O1);
 };
 class Character{
 private:
@@ -108,6 +122,8 @@ public:
     int times;
     int count = 0;
     void moveTowardMirror(Mirror player);
+    
 };
+
 #endif
 

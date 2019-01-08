@@ -67,7 +67,7 @@ void Bullet::reflect(Mirror& mirr){
 }
 bool Bullet::OnMirror(int x,int y,int mx,int my, int l, double theta)
 {
-    int DisToVertex = (x - mx) * (x - mx) + (y - my) * (y - my);
+    double DisToVertex = (x - mx) * (x - mx) + (y - my) * (y - my);
     if(DisToVertex > (l/2 + 20) * (l/2 + 20))
         return false;
     double line = mx + my * tan(theta);
@@ -76,6 +76,27 @@ bool Bullet::OnMirror(int x,int y,int mx,int my, int l, double theta)
         return true;
     else
         return false;
+}
+void Bullet::getInObstacle(Obstacle O1)
+{
+    double mid_x = (O1.coodLD_x + O1.coodRT_x)/2;
+    double mid_y = (O1.coodLD_y + O1.coodRT_y)/2;
+    double DisToVertex = (position_x - mid_x) * (position_x - mid_x) + (position_y - mid_y) * (position_y - mid_y);
+    double diameter = (O1.coodLD_x - mid_x) * (O1.coodLD_x - mid_x) + (O1.coodLD_y - mid_y) * (O1.coodLD_y - mid_y);
+    if(DisToVertex <= diameter )
+    {
+        if((position_x - O1.coodRT_x) < BulletSize/2)
+            live = false;
+        if((O1.coodLD_x - position_x) < BulletSize/2)
+            live = false;
+        if((position_y - O1.coodRT_y) < BulletSize/2)
+            live = false;
+        if((O1.coodLD_y - position_y) < BulletSize/2)
+            live = false;
+    }
+    
+    
+    
 }
 Character::Character(double x, double y, int playerID){
     if(playerID == 1){
@@ -136,6 +157,17 @@ void Character::shoot(int BulletCount)
     pBullet[BulletCount] = new Bullet(position_x,position_y,direction,id);
     addBulletCount();
 }
+void Character::moveTowardMirror(Mirror player)
+{
+    double rate = 0.5;
+    aim_position_x = (position_x + player.get_x()) * rate;
+    aim_position_y = (position_y + player.get_y()) * rate;
+    
+    double distanceSquare = ( aim_position_x - position_x ) * ( aim_position_x - position_x ) + ( aim_position_y - position_y ) * ( aim_position_y - position_y );
+    speed = 15;
+    times = sqrt(distanceSquare)/speed + 1;
+}
+
 Mirror::Mirror(double x, double y, int playerID, double _size, double _direction){
     if(playerID == 1){
         position_x = x;
@@ -199,16 +231,28 @@ void Mirror::rotate(int tao){
         direction -= angV;
     }
 }
-void Character::moveTowardMirror(Mirror player)
+bool Mirror::disToObstacle(Obstacle OB)
 {
-    double rate = 0.5;
-    aim_position_x = (position_x + player.get_x()) * rate;
-    aim_position_y = (position_y + player.get_y()) * rate;
+    double length = (size + (OB.coodRT_x - OB.coodLD_x))/2;
+    double dis = (position_x - (OB.coodRT_x + OB.coodLD_x)/2)*(position_x - (OB.coodRT_x + OB.coodLD_x)/2) + (position_y - (OB.coodRT_y + OB.coodLD_y)/2)*(position_y - (OB.coodRT_y + OB.coodLD_y)/2);
     
-    double distanceSquare = ( aim_position_x - position_x ) * ( aim_position_x - position_x ) + ( aim_position_y - position_y ) * ( aim_position_y - position_y );
-    speed = 15;
-    times = sqrt(distanceSquare)/speed + 1;
-};
+    if(dis < length * length )
+        return true;
+    else
+        return false;
+}
+Obstacle::Obstacle(double LD_x, double LD_y,double RT_x,double RT_y)
+{
+    coodLD_x = LD_x;
+    coodLD_y = LD_y;
+    coodRT_x = RT_x;
+    coodRT_y = RT_y;
+}
+void Obstacle::drawObstacle()
+{
+    glColor3f(.0, .0, .0);
+    glRectd(coodLD_x,coodLD_y , coodRT_x, coodRT_y);
+}
 Mirror::~Mirror(){
     
 }
@@ -219,4 +263,7 @@ Bullet::~Bullet()
 {
     
 }
-
+Obstacle::~Obstacle()
+{
+    
+}
