@@ -10,6 +10,7 @@ using namespace std;
 
 void WindowSize(int , int );            //????????????
 void loadTexture(char* filenamem, GLuint id);
+void Mouse(int button, int state, int x, int y);
 void Keyboard(unsigned char , int, int );   //??????
 void KeyboardUp(unsigned char, int, int);
 void Display(void);                     //??
@@ -30,7 +31,7 @@ Obstacle **tree = new Obstacle *[5];
 int tree_count = 2;
 bool keyStates[256] = {0};
 const char GAME_NAME[] = {"awesome game"};
-int mode = GAME_MODE_1;
+int mode = GAME_MENU;
 bool gamePause = false;
 int main(int argc, char** argv)
 {
@@ -46,6 +47,7 @@ int main(int argc, char** argv)
     //?????????Callback??
     glutReshapeFunc(WindowSize);
     glutIgnoreKeyRepeat(1);
+    glutMouseFunc(Mouse)
     glutKeyboardFunc(Keyboard);
     glutKeyboardUpFunc(KeyboardUp);
     glutDisplayFunc(Display);
@@ -58,6 +60,25 @@ int main(int argc, char** argv)
 void Display(void)
 {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	if(mode == GAME_MENU){
+		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
+		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glColor3f(1,1,1);
+		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+		GLuint start_button;
+		loadTexture("start.bmp", start_button);
+		glBindTexture(GL_TEXTURE_2D, start_button);
+		glBegin(GL_POLYGON);
+			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT);
+			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP);
+			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP);
+			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT);
+		glEnd();
+			
+		glutSwapBuffers();
+	}
 	if(mode == GAME_MODE_1){
 		
 		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
@@ -104,9 +125,22 @@ void Display(void)
 		glutSwapBuffers();
 		}
 }
+void Mouse(int button, int state, int x, int y){
+	if(mode == GAME_MENU){
+		if(x > START_BUTTON_LEFT && x < START_BUTTON_RIGHT && y > START_BUTTON_BOT && y < START_BUTTON_UP){
+			mode = GAME_MODE_1;
+			glPostRedisplay();
+		}
+	}
+}
 
 void Keyboard(unsigned char key, int x, int y)
 {
+	if(mode == GAME_MENU){
+		switch(key){
+			
+		}
+	}
 	if(mode == GAME_MODE_1){
 		switch(key){
         case('w'):
@@ -131,23 +165,22 @@ void Keyboard(unsigned char key, int x, int y)
 }
 void KeyboardUp(unsigned char key, int x, int y){
 	if(mode == GAME_MODE_1){
-		keyStates[key] = false;
-	}
-	switch(key){
-        case('2'):
-            _1p.moveTowardMirror(_1pMirror);
-            glutPostRedisplay();
-            keyStates['2'] = false;
-            break;
-        case('1'):
-            _2p.moveTowardMirror(_2pMirror);
-            glutPostRedisplay();
-            keyStates['1'] = false;
-            break;
-            
-        default:
-            keyStates[key] = true;
-            break;
+		switch(key){
+	        case('2'):
+	            _1p.moveTowardMirror(_1pMirror);
+	            glutPostRedisplay();
+	            keyStates['2'] = false;
+	            break;
+	        case('1'):
+	            _2p.moveTowardMirror(_2pMirror);
+	            glutPostRedisplay();
+	            keyStates['1'] = false;
+	            break;
+	            
+	        default:
+	            keyStates[key] = false;
+	            break;
+		}
 	}
     
 }
@@ -163,6 +196,200 @@ void ShootTimer(int)
 }
 void Timer(int)
 {
+	if(mode == GAME_MODE_1){
+		if(keyStates['g'] == true)
+	    {
+	        _1pMirror.move(UP);
+	        if(_1pMirror.disToObstacle(*tree[1]))
+	            _1pMirror.move(DOWN);
+	        else if(_1pMirror.disToObstacle(*tree[2]))
+	            _1pMirror.move(DOWN);
+	    }
+	    
+	    if(keyStates['v'] == true)
+	    {
+	        _1pMirror.move(LEFT);
+	        if(_1pMirror.disToObstacle(*tree[1]))
+	            _1pMirror.move(RIGHT);
+	        else if(_1pMirror.disToObstacle(*tree[2]))
+	            _1pMirror.move(RIGHT);
+	    }
+	    if(keyStates['b'] == true)
+	    {
+	        _1pMirror.move(DOWN);
+	        if(_1pMirror.disToObstacle(*tree[1]))
+	            _1pMirror.move(UP);
+	        else if(_1pMirror.disToObstacle(*tree[2]))
+	            _1pMirror.move(UP);
+	    }
+	    if(keyStates['n'] == true)
+	    {
+	        _1pMirror.move(RIGHT);
+	        if(_1pMirror.disToObstacle(*tree[1]))
+	            _1pMirror.move(LEFT);
+	        else if(_1pMirror.disToObstacle(*tree[2]))
+	            _1pMirror.move(LEFT);
+	    }
+	    if(keyStates['l'] == true)
+	    {
+	        _2pMirror.move(UP);
+	        if(_2pMirror.disToObstacle(*tree[1]))
+	            _2pMirror.move(DOWN);
+	        else if(_2pMirror.disToObstacle(*tree[2]))
+	            _2pMirror.move(DOWN);
+	    }
+	    
+	    if(keyStates[','] == true)
+	    {
+	        _2pMirror.move(LEFT);
+	        if(_2pMirror.disToObstacle(*tree[1]))
+	            _2pMirror.move(RIGHT);
+	        else if(_2pMirror.disToObstacle(*tree[2]))
+	            _2pMirror.move(RIGHT);
+	    }
+	    if(keyStates['.'] == true)
+	    {
+	        _2pMirror.move(DOWN);
+	        if(_2pMirror.disToObstacle(*tree[1]))
+	            _2pMirror.move(UP);
+	        else if(_2pMirror.disToObstacle(*tree[2]))
+	            _2pMirror.move(UP);
+	    }
+	    if(keyStates['/'] == true)
+	    {
+	        _2pMirror.move(RIGHT);
+	        if(_2pMirror.disToObstacle(*tree[1]))
+	            _2pMirror.move(LEFT);
+	        else if(_2pMirror.disToObstacle(*tree[2]))
+	            _2pMirror.move(LEFT);
+	    }
+	    if(keyStates['f'] == true)
+	        _1pMirror.rotate(1);
+	    if(keyStates['h'] == true)
+	        _1pMirror.rotate(-1);
+	    if(keyStates['k'] == true)
+	        _2pMirror.rotate(1);
+	    if(keyStates[';'] == true)
+	        _2pMirror.rotate(-1);
+	    if(keyStates['q'] == true)
+	        _1p.rotate(1);
+	    if(keyStates['e'] == true)
+	        _1p.rotate(-1);
+	    if(keyStates['6'] == true)
+	        _2p.rotate(1);
+	    if(keyStates['8'] == true)
+	        _2p.rotate(-1);
+	    if(_1p.get_x() > MAP_WIDTH)
+	        _1p.set_x(MAP_WIDTH);
+	    if(_1p.get_x() < 0)
+	        _1p.set_x(0);
+	    if(_1p.get_y() > MAP_HEIGHT)
+	        _1p.set_y(MAP_HEIGHT);
+	    if(_1p.get_y() < 0)
+	        _1p.set_y(0);
+	    if(_2p.get_x() > MAP_WIDTH)
+	        _2p.set_x(MAP_WIDTH);
+	    if(_2p.get_x() < 0)
+	        _2p.set_x(0);
+	    if(_2p.get_y() > MAP_HEIGHT)
+	        _2p.set_y(MAP_HEIGHT);
+	    if(_2p.get_y() < 0)
+	        _2p.set_y(0);
+	    
+	    if(_1pMirror.get_x() > MAP_WIDTH)
+	        _1pMirror.set_x(MAP_WIDTH);
+	    if(_1pMirror.get_x() < 0)
+	        _1pMirror.set_x(0);
+	    if(_1pMirror.get_y() > MAP_HEIGHT)
+	        _1pMirror.set_y(MAP_HEIGHT);
+	    if(_1pMirror.get_y() < 0)
+	        _1pMirror.set_y(0);
+	    if(_2pMirror.get_x() > MAP_WIDTH)
+	        _2pMirror.set_x(MAP_WIDTH);
+	    if(_2pMirror.get_x() < 0)
+	        _2pMirror.set_x(0);
+	    if(_2pMirror.get_y() > MAP_HEIGHT)
+	        _2pMirror.set_y(MAP_HEIGHT);
+	    if(_2pMirror.get_y() < 0)
+	        _2pMirror.set_y(0);
+	    //
+	    if(_1p.times != 0)
+	    {
+	        _1p.move();
+	        _1p.count++;
+	        if(_1p.count == _1p.times)
+	        {
+	            _1p.count = 0;
+	            _1p.times = 0;
+	            _1p.setSpeed(0);
+	        }
+	    }
+	    if(_2p.times != 0)
+	    {
+	        _2p.move();
+	        _2p.count++;
+	        if(_2p.count == _2p.times)
+	        {
+	            _2p.count = 0;
+	            _2p.times = 0;
+	            _2p.setSpeed(0);
+	        }
+	    }
+	    //
+	    /*
+	     if(_1p.disToObstacle(tree1))
+	     {
+	     if(_1p.get_x() > tree1.coodLD_x - 1 && (_1p.get_y() <= tree1.coodRT_y + 1 && _1p.get_y() >= tree1.coodLD_y - 1))
+	     _1p.set_x(tree1.coodLD_x - 1);
+	     if(_1p.get_y() > tree1.coodLD_y - 1 && (_1p.get_x() <= tree1.coodRT_x + 1 && _1p.get_x() >= tree1.coodLD_x - 1))
+	     _1p.set_y(tree1.coodLD_y - 1);
+	     if(_1p.get_x() < tree1.coodRT_x + 1 && (_1p.get_y() >= tree1.coodLD_y - 1 && _1p.get_y() <= tree1.coodRT_y + 1))
+	     _1p.set_x(tree1.coodRT_x + 1);
+	     if(_1p.get_y() < tree1.coodRT_y + 1 && (_1p.get_x() >= tree1.coodLD_x - 1 && _1p.get_x() <= tree1.coodRT_x + 1))
+	     _1p.set_y(tree1.coodRT_y + 1);
+	     }
+	     */
+	    //
+	    for(int i = 0 ; i < _1p.getBulletCount(); i++)
+	    {
+	        _1p.pBullet[i]->move();
+	        _1p.pBullet[i]->reflect(_1pMirror);
+	        _1p.pBullet[i]->reflect(_2pMirror);
+	        _1p.pBullet[i]->reflect(margin1);
+	        _1p.pBullet[i]->reflect(margin2);
+	        _1p.pBullet[i]->reflect(margin3);
+	        _1p.pBullet[i]->reflect(margin4);
+	        _1p.pBullet[i]->getInObstacle(*tree[1]);
+	        _1p.pBullet[i]->getInObstacle(*tree[2]);
+	        if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
+	            if(_1p.pBullet[i]->live){
+	                _2p.healthP -= _1p.pBullet[i]->get_atk();
+	                cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
+	                _1p.pBullet[i]->live = false;
+	            }
+	        }
+	    }
+	    for(int i = 0 ; i < _2p.getBulletCount(); i++)
+	    {
+	        _2p.pBullet[i]->move();
+	        _2p.pBullet[i]->reflect(_1pMirror);
+	        _2p.pBullet[i]->reflect(_2pMirror);
+	        _2p.pBullet[i]->reflect(margin1);
+	        _2p.pBullet[i]->reflect(margin2);
+	        _2p.pBullet[i]->reflect(margin3);
+	        _2p.pBullet[i]->reflect(margin4);
+	        _2p.pBullet[i]->getInObstacle(*tree[1]);
+	        _2p.pBullet[i]->getInObstacle(*tree[2]);
+	        if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
+	            if(_2p.pBullet[i]->live){
+	                _1p.healthP -= _2p.pBullet[i]->get_atk();
+	                cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
+	                _2p.pBullet[i]->live = false;
+	            }
+	        }
+	    }
+	    
+	}
     /*if(keyStates['w'] == true)
      _1p.move(UP);
      if(keyStates['a'] == true)
@@ -180,198 +407,7 @@ void Timer(int)
      if(keyStates['i'] == true)
      _2p.move(RIGHT);*/
     
-    if(keyStates['g'] == true)
-    {
-        _1pMirror.move(UP);
-        if(_1pMirror.disToObstacle(*tree[1]))
-            _1pMirror.move(DOWN);
-        else if(_1pMirror.disToObstacle(*tree[2]))
-            _1pMirror.move(DOWN);
-    }
-    
-    if(keyStates['v'] == true)
-    {
-        _1pMirror.move(LEFT);
-        if(_1pMirror.disToObstacle(*tree[1]))
-            _1pMirror.move(RIGHT);
-        else if(_1pMirror.disToObstacle(*tree[2]))
-            _1pMirror.move(RIGHT);
-    }
-    if(keyStates['b'] == true)
-    {
-        _1pMirror.move(DOWN);
-        if(_1pMirror.disToObstacle(*tree[1]))
-            _1pMirror.move(UP);
-        else if(_1pMirror.disToObstacle(*tree[2]))
-            _1pMirror.move(UP);
-    }
-    if(keyStates['n'] == true)
-    {
-        _1pMirror.move(RIGHT);
-        if(_1pMirror.disToObstacle(*tree[1]))
-            _1pMirror.move(LEFT);
-        else if(_1pMirror.disToObstacle(*tree[2]))
-            _1pMirror.move(LEFT);
-    }
-    if(keyStates['l'] == true)
-    {
-        _2pMirror.move(UP);
-        if(_2pMirror.disToObstacle(*tree[1]))
-            _2pMirror.move(DOWN);
-        else if(_2pMirror.disToObstacle(*tree[2]))
-            _2pMirror.move(DOWN);
-    }
-    
-    if(keyStates[','] == true)
-    {
-        _2pMirror.move(LEFT);
-        if(_2pMirror.disToObstacle(*tree[1]))
-            _2pMirror.move(RIGHT);
-        else if(_2pMirror.disToObstacle(*tree[2]))
-            _2pMirror.move(RIGHT);
-    }
-    if(keyStates['.'] == true)
-    {
-        _2pMirror.move(DOWN);
-        if(_2pMirror.disToObstacle(*tree[1]))
-            _2pMirror.move(UP);
-        else if(_2pMirror.disToObstacle(*tree[2]))
-            _2pMirror.move(UP);
-    }
-    if(keyStates['/'] == true)
-    {
-        _2pMirror.move(RIGHT);
-        if(_2pMirror.disToObstacle(*tree[1]))
-            _2pMirror.move(LEFT);
-        else if(_2pMirror.disToObstacle(*tree[2]))
-            _2pMirror.move(LEFT);
-    }
-    if(keyStates['f'] == true)
-        _1pMirror.rotate(1);
-    if(keyStates['h'] == true)
-        _1pMirror.rotate(-1);
-    if(keyStates['k'] == true)
-        _2pMirror.rotate(1);
-    if(keyStates[';'] == true)
-        _2pMirror.rotate(-1);
-    if(keyStates['q'] == true)
-        _1p.rotate(1);
-    if(keyStates['e'] == true)
-        _1p.rotate(-1);
-    if(keyStates['6'] == true)
-        _2p.rotate(1);
-    if(keyStates['8'] == true)
-        _2p.rotate(-1);
-    if(_1p.get_x() > MAP_WIDTH)
-        _1p.set_x(MAP_WIDTH);
-    if(_1p.get_x() < 0)
-        _1p.set_x(0);
-    if(_1p.get_y() > MAP_HEIGHT)
-        _1p.set_y(MAP_HEIGHT);
-    if(_1p.get_y() < 0)
-        _1p.set_y(0);
-    if(_2p.get_x() > MAP_WIDTH)
-        _2p.set_x(MAP_WIDTH);
-    if(_2p.get_x() < 0)
-        _2p.set_x(0);
-    if(_2p.get_y() > MAP_HEIGHT)
-        _2p.set_y(MAP_HEIGHT);
-    if(_2p.get_y() < 0)
-        _2p.set_y(0);
-    
-    if(_1pMirror.get_x() > MAP_WIDTH)
-        _1pMirror.set_x(MAP_WIDTH);
-    if(_1pMirror.get_x() < 0)
-        _1pMirror.set_x(0);
-    if(_1pMirror.get_y() > MAP_HEIGHT)
-        _1pMirror.set_y(MAP_HEIGHT);
-    if(_1pMirror.get_y() < 0)
-        _1pMirror.set_y(0);
-    if(_2pMirror.get_x() > MAP_WIDTH)
-        _2pMirror.set_x(MAP_WIDTH);
-    if(_2pMirror.get_x() < 0)
-        _2pMirror.set_x(0);
-    if(_2pMirror.get_y() > MAP_HEIGHT)
-        _2pMirror.set_y(MAP_HEIGHT);
-    if(_2pMirror.get_y() < 0)
-        _2pMirror.set_y(0);
-    //
-    if(_1p.times != 0)
-    {
-        _1p.move();
-        _1p.count++;
-        if(_1p.count == _1p.times)
-        {
-            _1p.count = 0;
-            _1p.times = 0;
-            _1p.setSpeed(0);
-        }
-    }
-    if(_2p.times != 0)
-    {
-        _2p.move();
-        _2p.count++;
-        if(_2p.count == _2p.times)
-        {
-            _2p.count = 0;
-            _2p.times = 0;
-            _2p.setSpeed(0);
-        }
-    }
-    //
-    /*
-     if(_1p.disToObstacle(tree1))
-     {
-     if(_1p.get_x() > tree1.coodLD_x - 1 && (_1p.get_y() <= tree1.coodRT_y + 1 && _1p.get_y() >= tree1.coodLD_y - 1))
-     _1p.set_x(tree1.coodLD_x - 1);
-     if(_1p.get_y() > tree1.coodLD_y - 1 && (_1p.get_x() <= tree1.coodRT_x + 1 && _1p.get_x() >= tree1.coodLD_x - 1))
-     _1p.set_y(tree1.coodLD_y - 1);
-     if(_1p.get_x() < tree1.coodRT_x + 1 && (_1p.get_y() >= tree1.coodLD_y - 1 && _1p.get_y() <= tree1.coodRT_y + 1))
-     _1p.set_x(tree1.coodRT_x + 1);
-     if(_1p.get_y() < tree1.coodRT_y + 1 && (_1p.get_x() >= tree1.coodLD_x - 1 && _1p.get_x() <= tree1.coodRT_x + 1))
-     _1p.set_y(tree1.coodRT_y + 1);
-     }
-     */
-    //
-    for(int i = 0 ; i < _1p.getBulletCount(); i++)
-    {
-        _1p.pBullet[i]->move();
-        _1p.pBullet[i]->reflect(_1pMirror);
-        _1p.pBullet[i]->reflect(_2pMirror);
-        _1p.pBullet[i]->reflect(margin1);
-        _1p.pBullet[i]->reflect(margin2);
-        _1p.pBullet[i]->reflect(margin3);
-        _1p.pBullet[i]->reflect(margin4);
-        _1p.pBullet[i]->getInObstacle(*tree[1]);
-        _1p.pBullet[i]->getInObstacle(*tree[2]);
-        if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
-            if(_1p.pBullet[i]->live){
-                _2p.healthP -= _1p.pBullet[i]->get_atk();
-                cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
-                _1p.pBullet[i]->live = false;
-            }
-        }
-    }
-    for(int i = 0 ; i < _2p.getBulletCount(); i++)
-    {
-        _2p.pBullet[i]->move();
-        _2p.pBullet[i]->reflect(_1pMirror);
-        _2p.pBullet[i]->reflect(_2pMirror);
-        _2p.pBullet[i]->reflect(margin1);
-        _2p.pBullet[i]->reflect(margin2);
-        _2p.pBullet[i]->reflect(margin3);
-        _2p.pBullet[i]->reflect(margin4);
-        _2p.pBullet[i]->getInObstacle(*tree[1]);
-        _2p.pBullet[i]->getInObstacle(*tree[2]);
-        if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
-            if(_2p.pBullet[i]->live){
-                _1p.healthP -= _2p.pBullet[i]->get_atk();
-                cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
-                _2p.pBullet[i]->live = false;
-            }
-        }
-    }
-    
+   
     glutPostRedisplay();
     glutTimerFunc(1000 / FPS, Timer, 0);
 }
