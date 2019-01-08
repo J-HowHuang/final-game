@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
-//#include "main.cpp"
+#include "main.cpp"
 #define START_BUTTON 4
 #define TUTORIAL_BUTTON 5
 #define SETTING_BUTTON 6
@@ -39,14 +39,14 @@ int WINAPI WinMain(HINSTANCE hinst , HINSTANCE hPrevInst , LPSTR args , int ncmd
 LRESULT CALLBACK WindowProcedure(HWND hWnd , UINT msg , WPARAM wp , LPARAM lp) 
 {
 	int val ; 
-	//char** game = nullptr;//
+	char** game = nullptr;//
 	switch (msg)
 	{
 		case WM_COMMAND:
 			switch(wp)
 			{
 				case START_BUTTON:
-					//main(1, game);
+					main(1, game);
 					break ;
 				case TUTORIAL_BUTTON:
 					val = MessageBoxW(hWnd , L"Try attack your enemy by moving the gun and turning the mirror." , L"Tutorial" , MB_OK) ;

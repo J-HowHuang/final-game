@@ -5,15 +5,12 @@
 #define default_y_1p 30
 #define MAP_WIDTH 1080
 #define MAP_HEIGHT 720
-#define CHAR_WIDTH 60
-#define CHAR_HEIGHT 60
-#define CANNON_LENGTH 45
+#define CHAR_WIDTH 40
+#define CHAR_HEIGHT 40
 #define MIRROR_SIZE 60
-#define MIRROR_WIDTH 12
 #define FPS 120
 #define MAX_BULLET_ON_PLANE 25000
 #define DEFAULT_SHOOTING_SPEED exp(1)
-#define MIRROR_OFFSET 0
 #define PI 3.14159
 
 #define UP PI / 2
@@ -25,24 +22,6 @@
 #define UP_LEFT PI / 4
 #define UP_RIGHT 3 * PI / 4
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-#define START_BUTTON_LEFT MAP_WIDTH / 2 - 172
-#define START_BUTTON_RIGHT = MAP_WIDTH / 2 + 172;
-#define START_BUTTON_UP  MAP_HEIGHT / 2 + 64;
-#define START_BUTTON_BOTy  MAP_HEIGHT / 2 - 64;
-=======
->>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
-=======
->>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
-=======
->>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
-#define GAME_MENU 1
-#define GAME_MODE_1 2
-#define GAME_MODE_2 3
-#define GAME_SETTING 4
-#define GAME_RESULT 5
 class Mirror{
 	private:
 		double position_x;
@@ -53,7 +32,7 @@ class Mirror{
 		double angV;
 		double size;
 	public:
-		Mirror(double x, double y, int playerID, double size, double direction = 0);
+		Mirror(double x, double y, int playerID, double size);
 		~Mirror();
 		void drawMirror();
 		void move(double direct);
@@ -99,14 +78,12 @@ class Character{
 		double position_x;
 		double position_y;
 		int bulletCount;
-		double angV;
 	public:
 		Character(double x, double y, int playerID);
 		~Character();
 		void drawCharacter();
 		double getDirection(){return direction;}
 		void setDirection(double direct){direction = direct;}
-		void rotate(int tao);
 		void move(double direct);
 		double get_x(){return position_x;}
 		void set_x(double x){position_x = x;}
