@@ -1,6 +1,9 @@
 #include "game.h"
 #include <GL\glut.h>
 #include <cmath>
+#include "bitmap.cpp"
+void loadTexture(char* filename, GLuint id);
+GLuint id;
 Bullet::Bullet(double x, double y, double direction_,int playerID)
 {
     
@@ -52,7 +55,7 @@ void Bullet::reflect(Mirror& mirr){
 bool Bullet::OnMirror(int x,int y,int mx,int my, int l, double theta)
 {
     int DisToVertex = (x - mx) * (x - mx) + (y - my) * (y - my);
-    if(DisToVertex > (l/2) * (l/2))
+    if(DisToVertex > (l + MIRROR_OFFSET) * (l + MIRROR_OFFSET))
         return false;
     double line = mx + my * tan(theta);
     double DisToLine = abs(x + y * tan(theta)- line)/sqrt(1 + tan(theta) * tan(theta));
@@ -88,17 +91,18 @@ Character::Character(double x, double y, int playerID){
 	}
 }
 void Character::drawCharacter(){
+	glLoadIdentity();
 	if(id == 1)
 		glColor3f(1.0, 0.0, 0.0);
 	else if(id == 2)
 		glColor3f(0.0, 0.0, 1.0);
 	//change number to constant 
-	glRectd(position_x - 20, position_y - 20, position_x + 20, position_y + 20);
+	glRectd(position_x - CHAR_WIDTH / 2, position_y - CHAR_WIDTH / 2, position_x + CHAR_WIDTH / 2, position_y + CHAR_WIDTH / 2);
 	glLoadIdentity();
 	glLineWidth(6);
 	glBegin(GL_LINES);
 		glVertex2f(position_x, position_y);
-		glVertex2f(position_x + cos(direction) * 35, position_y + sin(direction) * 35);
+		glVertex2f(position_x + cos(direction) * CANNON_LENGTH, position_y + sin(direction) * CANNON_LENGTH);
 	glEnd();
 }
 void Character::move(double direct){
@@ -154,17 +158,30 @@ Mirror::Mirror(double x, double y, int playerID, double _size, double _direction
 	}
 }
 void Mirror::drawMirror(){
-	if(id == 1)
-		glColor3f(1, 0, 0);
-	else if(id == 2)
-		glColor3f(0, 0, 1);
-	else
-		glColor3f(0, 0, 0);
+	glLoadIdentity();
+	if(id == 1){
+		GLuint mirror_text_1;
+		loadTexture("1p_mirror.bmp", mirror_text_1);
+		glBindTexture(GL_TEXTURE_2D, mirror_text_1);
+	}
+	else if(id == 2){
+		GLuint mirror_text_2;
+		loadTexture("2p_mirror.bmp", mirror_text_2);
+		glBindTexture(GL_TEXTURE_2D, mirror_text_2);
+	}
+	else{
+		GLuint mirror_text_3;
+		loadTexture("default_mirror.bmp", mirror_text_3);
+		glBindTexture(GL_TEXTURE_2D, mirror_text_3);
+	}
 		
-	glLineWidth(3 * sqrt(2));
-		glBegin(GL_LINES);
-			glVertex2f(position_x + size * cos(direction - PI / 2), position_y + size * sin(direction - PI / 2));
-			glVertex2f(position_x - size * cos(direction - PI / 2), position_y - size * sin(direction - PI / 2));
+//	glLineWidth(3 * sqrt(2));
+		glBegin(GL_POLYGON);
+			glColor3f(1.0, 1.0, 1.0);
+			glTexCoord2f(1, 1);glVertex2f(position_x + size * cos(direction - PI / 2) + MIRROR_WIDTH * cos(direction), position_y + size * sin(direction - PI / 2) + MIRROR_WIDTH * sin(direction));
+			glTexCoord2f(0, 1);glVertex2f(position_x - size * cos(direction - PI / 2) + MIRROR_WIDTH * cos(direction), position_y - size * sin(direction - PI / 2) + MIRROR_WIDTH * sin(direction));
+			glTexCoord2f(0, 0);glVertex2f(position_x - size * cos(direction - PI / 2) - MIRROR_WIDTH * cos(direction), position_y - size * sin(direction - PI / 2) - MIRROR_WIDTH * sin(direction));
+			glTexCoord2f(1, 0);glVertex2f(position_x + size * cos(direction - PI / 2) - MIRROR_WIDTH * cos(direction), position_y + size * sin(direction - PI / 2) - MIRROR_WIDTH * sin(direction));
 		glEnd();
 
 	
@@ -191,4 +208,14 @@ Bullet::~Bullet()
 {
     
 }
-
+void loadTexture(char* filename, GLuint id){
+	BmpLoader image(filename);
+	glGenTextures(1, &id);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
+	glEnable(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image.iWidth, image.iHeight, GL_RGB, GL_UNSIGNED_BYTE, image.TextureData);
+}
