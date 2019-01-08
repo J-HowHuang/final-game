@@ -85,7 +85,7 @@ bool Bullet::OnMirror(int x,int y,int mx,int my, int l, double theta)
     else
         return false;
 }
-void Bullet::getInObstacle(Obstacle O1)
+bool Bullet::getInObstacle(Obstacle O1)
 {
     double mid_x = (O1.coodLD_x + O1.coodRT_x)/2;
     double mid_y = (O1.coodLD_y + O1.coodRT_y)/2;
@@ -101,6 +101,7 @@ void Bullet::getInObstacle(Obstacle O1)
             live = false;
         if((O1.coodLD_y - position_y) < BulletSize/2)
             live = false;
+        return true;
     }
     
     
@@ -165,6 +166,9 @@ void Character::rotate(int tao){
 }
 void Character::shoot(int BulletCount)
 {
+	if(bulletCount >= 6){
+		return;
+	}
     pBullet[BulletCount] = new Bullet(position_x,position_y,direction,id);
     addBulletCount();
 }
@@ -176,6 +180,7 @@ void Character::moveTowardMirror(Mirror player)
     
     double distanceSquare = ( aim_position_x - position_x ) * ( aim_position_x - position_x ) + ( aim_position_y - position_y ) * ( aim_position_y - position_y );
     speed = 15;
+    direction = 
     times = sqrt(distanceSquare)/speed + 1;
 }
 

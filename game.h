@@ -34,6 +34,7 @@
 #define GAME_MODE_2 3
 #define GAME_SETTING 4
 #define GAME_RESULT 5
+#define GAME_MODE_SELECT 6
 #define OBSTACLE_WIDTH  100
 class Obstacle
 {
@@ -96,7 +97,7 @@ public:
     void reflect(Mirror& mirr);// here
     bool live;
     void setbulletsize(int bs){bullet_size = bs;}
-    void getInObstacle(Obstacle O1);
+    bool getInObstacle(Obstacle O1);
 };
 class Character{
 private:
@@ -106,7 +107,6 @@ private:
     int id;
     double position_x;
     double position_y;
-    int bulletCount;
     double angV;
     //move
     
@@ -114,6 +114,7 @@ public:
     Character(double x, double y, int playerID);
     ~Character();
     void drawCharacter();
+    int bulletCount;
     double getDirection(){return direction;}
     void setDirection(double direct){direction = direct;}
     void setSpeed(double spd){speed = spd;}

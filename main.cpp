@@ -36,6 +36,8 @@ const char GAME_NAME[] = {"awesome game"};
 int mode = GAME_MENU;
 bool gamePause = false;
 bool startPressed = false;
+bool mode1Pressed = false;
+bool mode2Pressed = false;
 int main(int argc, char** argv)
 {
     tree[1] = new Obstacle(500,360,500 + OBSTACLE_WIDTH,360 + OBSTACLE_WIDTH);
@@ -92,6 +94,56 @@ void Display(void)
 		}
 		glutSwapBuffers();
 	}
+	if(mode == GAME_MODE_SELECT){
+		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
+		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glColor3f(1,1,1);
+		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+		GLuint mode1_button;
+		loadTexture("start.bmp", mode1_button);
+		glBindTexture(GL_TEXTURE_2D, mode1_button);
+		glBegin(GL_POLYGON);
+			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
+			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
+			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
+			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
+		glEnd();
+		if(startPressed){
+			GLuint mode1_button_pressed;
+			loadTexture("start_pressed.bmp", mode1_button_pressed);
+			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
+			glBegin(GL_POLYGON);
+				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
+				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
+				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
+				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
+			glEnd();
+		}
+		
+		GLuint mode2_button;
+		loadTexture("start.bmp", mode2_button);
+		glBindTexture(GL_TEXTURE_2D, mode2_button);
+		glBegin(GL_POLYGON);
+			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
+			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
+			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
+			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
+		glEnd();
+		if(startPressed){
+			GLuint mode1_button_pressed;
+			loadTexture("start_pressed.bmp", mode1_button_pressed);
+			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
+			glBegin(GL_POLYGON);
+				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
+				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
+				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
+				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
+			glEnd();
+		}
+		glutSwapBuffers();
+	}
 	if(mode == GAME_MODE_1){
 		
 		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
@@ -144,12 +196,41 @@ void Mouse(int button, int state, int x, int y){
 			if(state == 0){
 				startPressed = true;
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				startPressed = false;
+				glutPostRedisplay();
+			}
+			if(state){
+				mode = GAME_MODE_SELECT;
+				glutPostRedisplay();
+				cout << "game start\n";
+			}
+		}
+	}
+	if(mode == GAME_MODE_SELECT){
+		if(x > START_BUTTON_LEFT && x < START_BUTTON_RIGHT && y > START_BUTTON_BOT + 96 && y < START_BUTTON_UP + 96){
+			if(state == 0){
+				mode1Pressed = true;
+				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				mode1Pressed = false;
 				glutPostRedisplay();
 			}
 			if(state){
 				mode = GAME_MODE_1;
 				glutPostRedisplay();
-				cout << "game start\n";
+				cout << "game1 start\n";
+			}
+		}
+		if(x > START_BUTTON_LEFT && x < START_BUTTON_RIGHT && y > START_BUTTON_BOT - 96 && y < START_BUTTON_UP - 96){
+			if(state == 0){
+				mode2Pressed = true;
+				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				mode2Pressed = false;
+				glutPostRedisplay();
+			}
+			if(state){
+				mode = GAME_MODE_2;
+				glutPostRedisplay();
+				cout << "game2 start\n";
 			}
 		}
 	}
@@ -374,13 +455,16 @@ void Timer(int)
 	        _1p.pBullet[i]->reflect(margin2);
 	        _1p.pBullet[i]->reflect(margin3);
 	        _1p.pBullet[i]->reflect(margin4);
-	        _1p.pBullet[i]->getInObstacle(*tree[1]);
-	        _1p.pBullet[i]->getInObstacle(*tree[2]);
+	        if(_1p.pBullet[i]->getInObstacle(*tree[1]))
+	        	_1p.bulletCount -= 1;
+	        if(_1p.pBullet[i]->getInObstacle(*tree[2]))
+	        	_1p.bulletCount -= 1;
 	        if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
 	            if(_1p.pBullet[i]->live){
 	                _2p.healthP -= _1p.pBullet[i]->get_atk();
 	                cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
 	                _1p.pBullet[i]->live = false;
+	                _1p.bulletCount -= 1;
 	            }
 	        }
 	    }
@@ -393,13 +477,16 @@ void Timer(int)
 	        _2p.pBullet[i]->reflect(margin2);
 	        _2p.pBullet[i]->reflect(margin3);
 	        _2p.pBullet[i]->reflect(margin4);
-	        _2p.pBullet[i]->getInObstacle(*tree[1]);
-	        _2p.pBullet[i]->getInObstacle(*tree[2]);
+	        if(_2p.pBullet[i]->getInObstacle(*tree[1]))
+	        	_2p.bulletCount -= 1;
+	        if(_2p.pBullet[i]->getInObstacle(*tree[2]))
+	        	_2p.bulletCount -= 1;
 	        if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
 	            if(_2p.pBullet[i]->live){
 	                _1p.healthP -= _2p.pBullet[i]->get_atk();
 	                cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
 	                _2p.pBullet[i]->live = false;
+	                _2p.bulletCount -= 1;
 	            }
 	        }
 	    }
