@@ -27,23 +27,20 @@ Mirror margin3(3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, LEFT);
 Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
 double music = 0.5;
 double sound = 0.5;
-Obstacle **tree = new Obstacle *[5];
-int tree_count = 2;
 bool keyStates[256] = {0};
 const char GAME_NAME[] = {"awesome game"};
 int mode = GAME_MENU;
 bool gamePause = false;
 int main(int argc, char** argv)
 {
-    tree[1] = new Obstacle(500,360,500 + OBSTACLE_WIDTH,360 + OBSTACLE_WIDTH);
-    tree[2] = new Obstacle(200,100,200 + OBSTACLE_WIDTH,100 + OBSTACLE_WIDTH);
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(1080,720);         //????
-    glutInitWindowPosition(600,80);         //????????
-    glutCreateWindow(GAME_NAME);      //????
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitWindowSize(1080,720);         //????
+	glutInitWindowPosition(600,80);         //????????
+	glutCreateWindow(GAME_NAME);      //????
 	glEnable(GL_BLEND); 
 	glDisable(GL_DEPTH_TEST);
+<<<<<<< HEAD
     //?????????Callback??
     glutReshapeFunc(WindowSize);
     glutIgnoreKeyRepeat(1);
@@ -55,6 +52,18 @@ int main(int argc, char** argv)
     glutTimerFunc(100, ShootTimer, 0);
     glutMainLoop();
     return 0;
+=======
+	//?????????Callback??
+	glutReshapeFunc(WindowSize);
+	glutIgnoreKeyRepeat(1);
+	glutKeyboardFunc(Keyboard);
+	glutKeyboardUpFunc(KeyboardUp);
+	glutDisplayFunc(Display);
+	glutTimerFunc(100, Timer, 0);
+	glutTimerFunc(100, ShootTimer, 0);
+	glutMainLoop();
+	return 0;
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 }
 
 void Display(void)
@@ -91,8 +100,6 @@ void Display(void)
 		_2p.drawCharacter();
 		_1pMirror.drawMirror();
 		_2pMirror.drawMirror();
-    	tree[1]->drawObstacle();
-    	tree[2]->drawObstacle();
 		margin1.drawMirror();
 		margin2.drawMirror();
 		margin3.drawMirror();
@@ -144,13 +151,13 @@ void Keyboard(unsigned char key, int x, int y)
 	if(mode == GAME_MODE_1){
 		switch(key){
         case('w'):
-            _1p.shoot(_1p.getBulletCount());
-            glutPostRedisplay();
+        	_1p.shoot(_1p.getBulletCount());
+		    glutPostRedisplay();
             keyStates['w'] = true;
             break;
         case('7'):
-            _2p.shoot(_2p.getBulletCount());
-            glutPostRedisplay();
+        	_2p.shoot(_2p.getBulletCount());
+		    glutPostRedisplay();
             keyStates['7'] = true;
             break;
         case(27):
@@ -165,6 +172,7 @@ void Keyboard(unsigned char key, int x, int y)
 }
 void KeyboardUp(unsigned char key, int x, int y){
 	if(mode == GAME_MODE_1){
+<<<<<<< HEAD
 		switch(key){
 	        case('2'):
 	            _1p.moveTowardMirror(_1pMirror);
@@ -183,17 +191,22 @@ void KeyboardUp(unsigned char key, int x, int y){
 		}
 	}
     
+=======
+		keyStates[key] = false;
+	}
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 }
 void ShootTimer(int)
 {
-    if(keyStates['w'] == true)
-        _1p.shoot(_1p.getBulletCount());
-    
-    if(keyStates['7'] == true)
-        _2p.shoot(_2p.getBulletCount());
-    glutPostRedisplay();
-    glutTimerFunc(1000 / DEFAULT_SHOOTING_SPEED, ShootTimer, 0);
+	if(keyStates['1'] == true)
+	    _1p.shoot(_1p.getBulletCount());
+	
+	if(keyStates['p'] == true)
+	    _2p.shoot(_2p.getBulletCount());
+	glutPostRedisplay();
+	glutTimerFunc(1000 / DEFAULT_SHOOTING_SPEED, ShootTimer, 0);
 }
+<<<<<<< HEAD
 void Timer(int)
 {
 	if(mode == GAME_MODE_1){
@@ -350,6 +363,75 @@ void Timer(int)
 	     }
 	     */
 	    //
+=======
+void Timer(int){
+	if(mode == GAME_MODE_1 && !gamePause){
+		if(keyStates['g'] == true)
+			_1pMirror.move(UP);
+		if(keyStates['v'] == true)
+			_1pMirror.move(LEFT);
+		if(keyStates['b'] == true)
+			_1pMirror.move(DOWN);
+		if(keyStates['n'] == true)
+			_1pMirror.move(RIGHT);
+		if(keyStates['l'] == true)
+			_2pMirror.move(UP);
+		if(keyStates[','] == true)
+			_2pMirror.move(LEFT);
+		if(keyStates['.'] == true)
+			_2pMirror.move(DOWN);
+		if(keyStates['/'] == true)
+			_2pMirror.move(RIGHT);
+		if(keyStates['f'] == true)
+			_1pMirror.rotate(1);
+		if(keyStates['h'] == true)
+			_1pMirror.rotate(-1);
+		if(keyStates['k'] == true)
+			_2pMirror.rotate(1);
+		if(keyStates[';'] == true)
+			_2pMirror.rotate(-1);
+		if(keyStates['q'] == true)
+			_1p.rotate(1);
+		if(keyStates['e'] == true)
+			_1p.rotate(-1);
+		if(keyStates['6'] == true)
+			_2p.rotate(1);
+		if(keyStates['8'] == true)
+			_2p.rotate(-1);
+		if(_1p.get_x() > MAP_WIDTH)
+			_1p.set_x(MAP_WIDTH);
+		if(_1p.get_x() < 0)
+			_1p.set_x(0);
+		if(_1p.get_y() > MAP_HEIGHT)
+			_1p.set_y(MAP_HEIGHT);
+		if(_1p.get_y() < 0)
+			_1p.set_y(0);
+		if(_2p.get_x() > MAP_WIDTH)
+			_2p.set_x(MAP_WIDTH);
+		if(_2p.get_x() < 0)
+			_2p.set_x(0);
+		if(_2p.get_y() > MAP_HEIGHT)
+			_2p.set_y(MAP_HEIGHT);
+		if(_2p.get_y() < 0)
+			_2p.set_y(0);
+		
+		if(_1pMirror.get_x() > MAP_WIDTH)
+			_1pMirror.set_x(MAP_WIDTH);
+		if(_1pMirror.get_x() < 0)
+			_1pMirror.set_x(0);
+		if(_1pMirror.get_y() > MAP_HEIGHT)
+			_1pMirror.set_y(MAP_HEIGHT);
+		if(_1pMirror.get_y() < 0)
+			_1pMirror.set_y(0);
+		if(_2pMirror.get_x() > MAP_WIDTH)
+			_2pMirror.set_x(MAP_WIDTH);
+		if(_2pMirror.get_x() < 0)
+			_2pMirror.set_x(0);
+		if(_2pMirror.get_y() > MAP_HEIGHT)
+			_2pMirror.set_y(MAP_HEIGHT);
+		if(_2pMirror.get_y() < 0)
+			_2pMirror.set_y(0);	
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 	    for(int i = 0 ; i < _1p.getBulletCount(); i++)
 	    {
 	        _1p.pBullet[i]->move();
@@ -359,6 +441,7 @@ void Timer(int)
 	        _1p.pBullet[i]->reflect(margin2);
 	        _1p.pBullet[i]->reflect(margin3);
 	        _1p.pBullet[i]->reflect(margin4);
+<<<<<<< HEAD
 	        _1p.pBullet[i]->getInObstacle(*tree[1]);
 	        _1p.pBullet[i]->getInObstacle(*tree[2]);
 	        if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
@@ -368,6 +451,15 @@ void Timer(int)
 	                _1p.pBullet[i]->live = false;
 	            }
 	        }
+=======
+	        if(abs(_1p.pBullet[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 && abs(_1p.pBullet[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2){
+	        	if(_1p.pBullet[i]->live){
+					_2p.healthP -= _1p.pBullet[i]->get_atk();
+		        	cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
+		        	_1p.pBullet[i]->live = false;
+				}
+			}
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 	    }
 	    for(int i = 0 ; i < _2p.getBulletCount(); i++)
 	    {
@@ -378,6 +470,7 @@ void Timer(int)
 	        _2p.pBullet[i]->reflect(margin2);
 	        _2p.pBullet[i]->reflect(margin3);
 	        _2p.pBullet[i]->reflect(margin4);
+<<<<<<< HEAD
 	        _2p.pBullet[i]->getInObstacle(*tree[1]);
 	        _2p.pBullet[i]->getInObstacle(*tree[2]);
 	        if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
@@ -410,13 +503,28 @@ void Timer(int)
    
     glutPostRedisplay();
     glutTimerFunc(1000 / FPS, Timer, 0);
+=======
+	        if(abs(_2p.pBullet[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 && abs(_2p.pBullet[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2){
+	        	if(_2p.pBullet[i]->live){
+					_1p.healthP -= _2p.pBullet[i]->get_atk();
+		        	cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
+		        	_2p.pBullet[i]->live = false;
+				}
+			}
+	    }
+	    
+	}
+
+	glutPostRedisplay();
+	glutTimerFunc(1000 / FPS, Timer, 0);
+>>>>>>> parent of 5de7921... Merge branch 'master' of https://github.com/J-HowHuang/final-game
 }
 void WindowSize(int w, int h)
 {
-    glViewport(0, 0, w, h);            //????????,??????
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0,MAP_WIDTH, 0,MAP_HEIGHT,-200,10);      //????
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
+   glViewport(0, 0, w, h);            //????????,??????
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho(0,MAP_WIDTH, 0,MAP_HEIGHT,-200,10);      //????
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+} 
