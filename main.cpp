@@ -3,13 +3,14 @@
 #include <iostream>
 #include <stdlib.h>
 #include<windows.h>
+#include <GL\freeglut.h> 
 #include<Mmsystem.h>
 #pragma comment(lib,"winmm.lib")
 #include <GL\glut.h>//??DevC++??????? #include <GL\openglut.h>
 #include <cstring>
 #include <cmath>
 #include "game.h"
-#include "botton.h"
+#include "button.h"
 using namespace std;
 
 void WindowSize(int , int );            //????????????
@@ -29,7 +30,9 @@ Mirror margin1(MAP_WIDTH / 2, 3, 0, MAP_WIDTH, UP);
 Mirror margin2(MAP_WIDTH / 2, MAP_HEIGHT - 3, 0, MAP_WIDTH, DOWN);
 Mirror margin3(3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, LEFT);
 Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
-Botton start("start", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 32, 172, 64);
+Button start("start", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 32, 172, 64);
+Button tutorial("tutorial", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 116, 172, 64);
+Button quit("quit", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 200, 172, 64);
 double music = 0.5;
 double sound = 0.5;
 Obstacle **tree = new Obstacle *[5];
@@ -39,6 +42,8 @@ const char GAME_NAME[] = {"awesome game"};
 int mode = GAME_MENU;
 bool gamePause = false;
 bool startPressed = false;
+bool tutorialPressed = false;
+bool quitPressed = false;
 bool mode1Pressed = false;
 bool mode2Pressed = false;
 int main(int argc, char** argv)
@@ -95,7 +100,9 @@ void Display(void)
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT);
 			glEnd();
 		}*/
-		start.drawBotton();
+		start.drawButton() ;
+		tutorial.drawButton() ;
+		quit.drawButton() ;
 		glutSwapBuffers();
 	}
 	if(mode == GAME_MODE_1){
@@ -200,12 +207,33 @@ void Mouse(int button, int state, int x, int y){
 			if(state == 0){
 				startPressed = true;
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
-				glutPostRedisplay();
+				glutPostRedisplay(); 
 			}
 			if(state){
 				mode = GAME_MODE_SELECT;
 				glutPostRedisplay();
 				cout << "game start\n";
+			}
+		}
+		if(x > TUTORIAL_BUTTON_LEFT && x < TUTORIAL_BUTTON_RIGHT && y > TUTORIAL_BUTTON_BOT && y < TUTORIAL_BUTTON_UP){
+			if(state == 0){
+				tutorialPressed = true;
+				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				glutPostRedisplay();
+			}
+			if(state){
+				//mode = GAME_TUTORIAL ;
+				glutPostRedisplay() ;
+			}
+		}
+		if(x > QUIT_BUTTON_LEFT && x < QUIT_BUTTON_RIGHT && y > QUIT_BUTTON_BOT && y < QUIT_BUTTON_UP){
+			if(state == 0){
+				quitPressed = true;
+				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				glutPostRedisplay();
+			}
+			if(state){
+				glutDestroyWindow(1); 
 			}
 		}
 	}
