@@ -1,22 +1,21 @@
-
 #include <GL\glut.h>
 #include <cmath>
 #include<windows.h>
 #include<Mmsystem.h>
-#include "botton.h"
+#include "button.h"
 #include "bitmap.cpp"
 #include <cstring>
 void loadTexture(char*, GLuint);
-Botton::Botton(char* bottonName, double  x, double y, double _width, double _height){
-	name = new char[MAX_BOTTON_NAME_LENGTH];
-	strcpy(name, bottonName);
+Button::Button(char* buttonName, double  x, double y, double _width, double _height){
+	name = new char[MAX_BUTTON_NAME_LENGTH];
+	strcpy(name, buttonName);
 	position_x = x;
 	position_y = y;
-	width = _width;
-	height = _height;
+	width = _width ;
+	height = _height ;
 }
-void Botton::drawBotton(){
-	char* filename = new char[MAX_BOTTON_NAME_LENGTH];
+void Button::drawButton(){
+	char* filename = new char[MAX_BUTTON_NAME_LENGTH];
 	filename = strcat(name, ".bmp");
 	loadTexture(filename, id);
 	glBindTexture(GL_TEXTURE_2D, id);
@@ -28,14 +27,14 @@ void Botton::drawBotton(){
 		glTexCoord2f(1, 0); glVertex2f(position_x + width, position_y);
 	glEnd();
 }
-bool Botton::onBotton(double x, double y){
+bool Button::onButton(double x, double y){
 	if(x > position_x && x < position_x + width && y > position_y && y < position_y + height)
 		return true;
 	else
 		return false;
 }
-void Botton::clicked(){
-	char* filename = new char[MAX_BOTTON_NAME_LENGTH];
+void Button::clicked(){
+	char* filename = new char[MAX_BUTTON_NAME_LENGTH];
 	filename = strcat(name, "_clicked.bmp");
 	loadTexture(filename, id);
 	glBindTexture(GL_TEXTURE_2D, id);
@@ -48,7 +47,7 @@ void Botton::clicked(){
 	glEnd();
 	PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 }
-Botton::~Botton(){
+Button::~Button(){
 	
 }
 void loadTexture(char* filename, GLuint id){
