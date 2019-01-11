@@ -1,11 +1,11 @@
-
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
-#include<windows.h>
-#include<Mmsystem.h>
+#include <windows.h>
+#include <Mmsystem.h>
 #pragma comment(lib,"winmm.lib")
-#include <GL\glut.h>//??DevC++??????? #include <GL\openglut.h>
+//#include <GL\glut.h>//??DevC++??????? #include <GL\openglut.h>
+//#include <GL\freeglut.h>
 #include <cstring>
 #include <cmath>
 #include "game.h"
@@ -41,6 +41,7 @@ bool gamePause = false;
 bool startPressed = false;
 bool mode1Pressed = false;
 bool mode2Pressed = false;
+
 int main(int argc, char** argv)
 {
     tree[1] = new Obstacle(500,360,500 + OBSTACLE_WIDTH,360 + OBSTACLE_WIDTH);
@@ -158,7 +159,7 @@ void Display(void)
 			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
 			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
 			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
-		glEnd();
+		glEnd();}
 	/*	if(mode1Pressed){
 			GLuint mode1_button_pressed;
 			loadTexture("mod1_pressed.bmp", mode1_button_pressed);
@@ -170,7 +171,7 @@ void Display(void)
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 			glEnd();
 		}*/
-		
+	else{
 		GLuint mode2_button;
 		loadTexture("mod2.bmp", mode2_button);
 		glBindTexture(GL_TEXTURE_2D, mode2_button);
@@ -194,7 +195,8 @@ void Display(void)
 		glutSwapBuffers();
 	}
 }
-void Mouse(int button, int state, int x, int y){
+void Mouse(int button, int state, int x, int y)
+{
 	if(mode == GAME_MENU){
 		if(x > START_BUTTON_LEFT && x < START_BUTTON_RIGHT && y > START_BUTTON_BOT && y < START_BUTTON_UP){
 			if(state == 0){
@@ -238,7 +240,7 @@ void Mouse(int button, int state, int x, int y){
 		}
 		
 		GLuint mode2_button;
-		loadTexture("mod1.bmp", mode2_button);
+		loadTexture("mod2.bmp", mode2_button);
 		glBindTexture(GL_TEXTURE_2D, mode2_button);
 		glBegin(GL_POLYGON);
 			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
@@ -248,10 +250,9 @@ void Mouse(int button, int state, int x, int y){
 		glEnd();
 		if(mode2Pressed){
 			GLuint mode1_button_pressed;
-			loadTexture("mod1_pressed.bmp", mode1_button_pressed);
-			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
+			loadTexture("mod2_pressed.bmp", mode2_button_pressed);
+			glBindTexture(GL_TEXTURE_2D, mode2_button_pressed);
 			glBegin(GL_POLYGON);
-			
 				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
 				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
 				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
@@ -285,7 +286,8 @@ void Keyboard(unsigned char key, int x, int y)
 		}
 	}
 }
-void KeyboardUp(unsigned char key, int x, int y){
+void KeyboardUp(unsigned char key, int x, int y)
+{
 	if(mode == GAME_MODE_1){
 		switch(key){
 	        case('2'):
