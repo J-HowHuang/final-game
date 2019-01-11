@@ -1,19 +1,4 @@
-#ifndef BMPLOADER_H
-#define BMPLOADER_H
-#include<windows.h>
-class BmpLoader
-{
-private:
-    BITMAPFILEHEADER bfh;
-    BITMAPINFOHEADER bih;
-public:
-    unsigned char *TextureData;
-    int iWidth,iHeight;
-    BmpLoader(const char *);
-    ~BmpLoader();
-    
-};
-#endif
+#include "bitmap.h"
 #include <stdio.h>
 #include <iostream>
 using namespace std;
@@ -23,7 +8,7 @@ BmpLoader::BmpLoader(const char *filename  )
     file = fopen(filename, "rb");
     if(!file)
     {
-        cout << "File not found" << endl;
+        cout << filename << " <File not found" << endl;
     }
     fread(&bfh, sizeof(BITMAPFILEHEADER), 1, file);
     if(bfh.bfType != 0x4D42)
