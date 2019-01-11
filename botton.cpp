@@ -4,21 +4,20 @@
 #include<windows.h>
 #include<Mmsystem.h>
 #include "botton.h"
-#include "bitmap.cpp"
+#include "bitmap.h"
 #include <cstring>
-void loadTexture(char*, GLuint);
+void bottonLoadTexture(char*, GLuint);
 Botton::Botton(char* bottonName, double  x, double y, double _width, double _height){
 	name = new char[MAX_BOTTON_NAME_LENGTH];
 	strcpy(name, bottonName);
+	strcat(name, ".bmp");
 	position_x = x;
 	position_y = y;
 	width = _width;
 	height = _height;
 }
 void Botton::drawBotton(){
-	char* filename = new char[MAX_BOTTON_NAME_LENGTH];
-	filename = strcat(name, ".bmp");
-	loadTexture(filename, id);
+	bottonLoadTexture(name, id);
 	glBindTexture(GL_TEXTURE_2D, id);
 	glColor3f(1, 1, 1);
 	glBegin(GL_POLYGON);
@@ -37,7 +36,7 @@ bool Botton::onBotton(double x, double y){
 void Botton::clicked(){
 	char* filename = new char[MAX_BOTTON_NAME_LENGTH];
 	filename = strcat(name, "_clicked.bmp");
-	loadTexture(filename, id);
+	bottonLoadTexture(filename, id);
 	glBindTexture(GL_TEXTURE_2D, id);
 	glColor3f(1, 1, 1);
 	glBegin(GL_POLYGON);
@@ -51,7 +50,7 @@ void Botton::clicked(){
 Botton::~Botton(){
 	
 }
-void loadTexture(char* filename, GLuint id){
+void bottonLoadTexture(char* filename, GLuint id){
 	BmpLoader image(filename);
 	glGenTextures(1, &id);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
