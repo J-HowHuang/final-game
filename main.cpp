@@ -31,8 +31,8 @@ Mirror margin2(MAP_WIDTH / 2, MAP_HEIGHT - 3, 0, MAP_WIDTH, DOWN);
 Mirror margin3(3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, LEFT);
 Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
 Button start("start", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 32, 172, 64);
-Button tutorial("tutorial", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 116, 172, 64);
-Button quit("quit", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 200, 172, 64);
+Button tutorial("mod1", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 116, 172, 64);
+Button quit("mod2", MAP_WIDTH / 2 - 81, MAP_HEIGHT / 2 - 200, 172, 64);
 double music = 0.5;
 double sound = 0.5;
 Obstacle **tree = new Obstacle *[5];
@@ -80,26 +80,6 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-	/*	GLuint start_button;
-		loadTexture("start.bmp", start_button);
-		glBindTexture(GL_TEXTURE_2D, start_button);
-		glBegin(GL_POLYGON);
-			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT);
-			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP);
-			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP);
-			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT);
-		glEnd();
-		if(startPressed){
-			GLuint start_button_pressed;
-			loadTexture("start_pressed.bmp", start_button_pressed);
-			glBindTexture(GL_TEXTURE_2D, start_button_pressed);
-			glBegin(GL_POLYGON);
-				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT);
-				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP);
-				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP);
-				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT);
-			glEnd();
-		}*/
 		start.drawButton() ;
 		tutorial.drawButton() ;
 		quit.drawButton() ;
