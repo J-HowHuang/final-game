@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
-#include<windows.h>
+#include <windows.h>
 #include <GL\freeglut.h> 
-#include<Mmsystem.h>
+#include <Mmsystem.h>
 #pragma comment(lib,"winmm.lib")
 #include <GL\glut.h>//??DevC++??????? #include <GL\openglut.h>
 #include <cstring>
@@ -11,7 +11,6 @@
 #include "game.h"
 #include "button.h"
 using namespace std;
-
 void WindowSize(int , int );            //????????????
 void loadTexture(char* filenamem, GLuint id);
 void Keyboard(unsigned char , int, int );   //??????
@@ -30,16 +29,16 @@ Mirror margin2(MAP_WIDTH / 2, MAP_HEIGHT - 3, 0, MAP_WIDTH, DOWN);
 Mirror margin3(3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, LEFT);
 Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
 Button start("start", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 32, 172, 64);
-Button tutorial("mod1", MAP_WIDTH / 2 - 86, MAP_HEIGHT / 2 - 116, 172, 64) ;
-Button quit("quit", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 200, 172, 64);
+Button tutorial("tutorial", MAP_WIDTH / 2 - 86, MAP_HEIGHT / 2 - 116, 172, 64) ;
+Button quit("quit", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 200, 172 , 64);
 Button back("mod1", MAP_WIDTH / 2 + 300, MAP_HEIGHT / 2 - 300, 172, 64);
 Button tutorialBg("tutorialBackground", 0, 0, 1000, 720);
 Button close("close_1", 0, 0, 1000, 720);
+Button backGround("shit", 0, 0, 1000, 720);
 Button yes("mod1" , MAP_WIDTH / 2 - 278 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
 Button no("mod1" , MAP_WIDTH / 2 + 86 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
 Button mod1("mod1", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 + 96, 344, 128);
 Button mod2("mod2", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 - 96, 344, 128);
-
 double music = 0.5;
 double sound = 0.5;
 Obstacle **tree = new Obstacle *[5];
@@ -91,6 +90,7 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+		backGround.drawButton() ;
 		start.drawButton() ;
 		tutorial.drawButton() ;
 		quit.drawButton() ;
@@ -173,6 +173,7 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+//<<<<<<< HEAD
 		back.drawButton() ;
 		/*GLuint mode1_button;
 		loadTexture("mod1.bmp", mode1_button);
@@ -214,6 +215,8 @@ void Display(void)
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
 			glEnd();
 		}*/
+//=======
+//>>>>>>> fc99fb040cb93cea63a707b4b8639b854bcd558c
 		mod1.drawButton();
 		mod2.drawButton();
 		glutSwapBuffers();
@@ -246,14 +249,13 @@ void Mouse(int button, int state, int x, int y){
 		}
 		else if(quit.onButton(x, y)){ // help
 			if(state == 0){
-				quitPressed = true;
+				quit.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
 			}
 			if(state){
 					mode = GAME_CLOSE ;
 					glutPostRedisplay();
-				//glutDestroyWindow(glutCreateWindow(GAME_NAME));
 			}
 		}
 		cout << start.onButton(x, y) << " " << tutorial.onButton(x, y) << " " << quit.onButton(x, y) << endl;
@@ -322,6 +324,7 @@ void Mouse(int button, int state, int x, int y){
 		//glutSwapBuffers();
 	}
 	if(mode == GAME_MODE_SELECT){
+//<<<<<<< HEAD
 		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
 		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
@@ -385,7 +388,9 @@ void Mouse(int button, int state, int x, int y){
 			}
 		}
 	}
-		glutSwapBuffers();
+//=======
+//>>>>>>> fc99fb040cb93cea63a707b4b8639b854bcd558c
+	glutSwapBuffers();
 	
 }
 void Keyboard(unsigned char key, int x, int y)
