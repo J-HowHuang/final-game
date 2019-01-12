@@ -1,11 +1,11 @@
 #include <GL\glut.h>
 #include <GL\freeglut.h>
 #include <cmath>
+#include <ctime>
 #include <windows.h>
 #include <Mmsystem.h>
 #include "game.h"
 #include "bitmap.h"
-
 void loadTexture(char* filename, GLuint id);
 GLuint id;
 Bullet::Bullet(double x, double y, double direction_,int playerID)
