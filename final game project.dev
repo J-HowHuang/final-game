@@ -11,7 +11,7 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=
 CppCompiler=
-Linker=-lopengl32_@@_-lfreeglut_@@_-lglu32_@@_"../../../../../../../../Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib/libwinmm.a"_@@_
+Linker=-lopengl32_@@_-lfreeglut_@@_-lglu32_@@_"../../../../../../../../../Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib/libwinmm.a"_@@_
 IsCpp=1
 Icon=
 ExeOutput=
@@ -81,7 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=botton.h
+FileName=bitmap.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -101,7 +101,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=bitmap.h
+FileName=bitmap.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -111,7 +111,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=bitmap.cpp
+FileName=button.h
 CompileCpp=1
 Folder=
 Compile=1
