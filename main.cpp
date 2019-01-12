@@ -37,6 +37,9 @@ Button tutorialBg("tutorialBackground", 0, 0, 1000, 720);
 Button close("close_1", 0, 0, 1000, 720);
 Button yes("mod1" , MAP_WIDTH / 2 - 278 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
 Button no("mod1" , MAP_WIDTH / 2 + 86 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
+Button mod1("mod1", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 + 96, 344, 128);
+Button mod2("mod2", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 - 96, 344, 128);
+
 double music = 0.5;
 double sound = 0.5;
 Obstacle **tree = new Obstacle *[5];
@@ -171,7 +174,7 @@ void Display(void)
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
 		back.drawButton() ;
-		GLuint mode1_button;
+		/*GLuint mode1_button;
 		loadTexture("mod1.bmp", mode1_button);
 		glBindTexture(GL_TEXTURE_2D, mode1_button);
 		glBegin(GL_POLYGON);
@@ -180,7 +183,7 @@ void Display(void)
 			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
 			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 		glEnd();
-		/*if(mode1Pressed){
+		if(mode1Pressed){
 			GLuint mode1_button_pressed;
 			loadTexture("mod1_pressed.bmp", mode1_button_pressed);
 			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
@@ -190,7 +193,7 @@ void Display(void)
 				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 			glEnd();
-		}*/
+		}
 		GLuint mode2_button;
 		loadTexture("mod2.bmp", mode2_button);
 		glBindTexture(GL_TEXTURE_2D, mode2_button);
@@ -211,26 +214,28 @@ void Display(void)
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
 			glEnd();
 		}*/
+		mod1.drawButton();
+		mod2.drawButton();
 		glutSwapBuffers();
 	}
 }
 void Mouse(int button, int state, int x, int y){
 	if(mode == GAME_MENU){
-		if(x > START_BUTTON_LEFT && x < START_BUTTON_RIGHT && y > START_BUTTON_BOT && y < START_BUTTON_UP){
+		if(start.onButton(x, y)){
 			if(state == 0){
-				startPressed = true;
+				start.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay(); 
 			}
-			if(state){
+			if(state == 1){
 				mode = GAME_MODE_SELECT;
 				glutPostRedisplay();
 				cout << "game start\n";
 			}
 		}
-		else if(x > START_BUTTON_LEFT && x < START_BUTTON_RIGHT && y >  START_BUTTON_BOT + 84 && y < START_BUTTON_UP + 84){
+		else if(tutorial.onButton(x, y)){ // help
 			if(state == 0){
-				tutorialPressed = true;
+				tutorial.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
 			}
@@ -239,7 +244,7 @@ void Mouse(int button, int state, int x, int y){
 				glutPostRedisplay() ;
 			}
 		}
-		else if(x > START_BUTTON_LEFT && x < START_BUTTON_RIGHT && y > START_BUTTON_BOT + 168 && y < START_BUTTON_UP + 168){
+		else if(quit.onButton(x, y)){ // help
 			if(state == 0){
 				quitPressed = true;
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -251,6 +256,7 @@ void Mouse(int button, int state, int x, int y){
 				//glutDestroyWindow(glutCreateWindow(GAME_NAME));
 			}
 		}
+		cout << start.onButton(x, y) << " " << tutorial.onButton(x, y) << " " << quit.onButton(x, y) << endl;
 	}
 	if(mode == GAME_TUTORIAL)
 	{
@@ -378,8 +384,9 @@ void Mouse(int button, int state, int x, int y){
 				glutPostRedisplay() ;
 			}
 		}
-		glutSwapBuffers();
 	}
+		glutSwapBuffers();
+	
 }
 void Keyboard(unsigned char key, int x, int y)
 {
@@ -631,8 +638,6 @@ void Timer(int)
 	        }
 	    }
 	}
-    
-    
     glutPostRedisplay();
     glutTimerFunc(1000 / FPS, Timer, 0);
 }
