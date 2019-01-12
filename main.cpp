@@ -34,9 +34,9 @@ Button quit("quit", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 200, 172 , 64);
 Button back("mod1", MAP_WIDTH / 2 + 300, MAP_HEIGHT / 2 - 300, 172, 64);
 Button tutorialBg("tutorialBackground", 0, 0, 1000, 720);
 Button close("close_1", 0, 0, 1000, 720);
-Button backGround("shit", 0, 0, 1000, 720);
-Button yes("mod1" , MAP_WIDTH / 2 - 278 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
-Button no("mod1" , MAP_WIDTH / 2 + 86 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
+Button backGround("shit", 0, 0, 1080, 720);
+Button yes("yes" , MAP_WIDTH / 2 - 278 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
+Button no("no" , MAP_WIDTH / 2 + 86 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
 Button mod1("mod1", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 + 96, 344, 128);
 Button mod2("mod2", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 - 96, 344, 128);
 double music = 0.5;
@@ -390,7 +390,7 @@ void Mouse(int button, int state, int x, int y){
 	}
 //=======
 //>>>>>>> fc99fb040cb93cea63a707b4b8639b854bcd558c
-	glutSwapBuffers();
+	//glutSwapBuffers();
 	
 }
 void Keyboard(unsigned char key, int x, int y)
