@@ -63,6 +63,17 @@ private:
     double speed;
     double angV;
     double size;
+    
+    double position_x_init;
+    double position_y_init;
+    double direction_init;
+    int id_init;
+    double speed_init;
+    double angV_init;
+    double size_init;
+    bool moving_init;
+    bool reflectable_init;
+    
 public:
     Mirror(double x, double y, int playerID, double size, double direction = 0);
     ~Mirror();
@@ -78,6 +89,7 @@ public:
     double getDirection(){return direction;}
     void setDirection(double direct){direction = direct;}
     double getSize(){return size;}
+    void init();
     bool disToObstacle(Obstacle OB);
 };
 class Bullet{
@@ -115,7 +127,17 @@ private:
     int bulletCount;
     double angV;
     //move
-    
+    double speed_init;
+    double power_init;
+    double direction_init;
+    int id_init;
+    double position_x_init;
+    double position_y_init;
+    int bulletCount_init;
+    double angV_init;
+    double healthP_init;
+    bool moving_init;
+    int count_init;
 public:
     Character(double x, double y, int playerID);
     ~Character();
@@ -133,6 +155,7 @@ public:
     void addBulletCount(){bulletCount++;}
     bool moving;
     void shoot(int BulletCount);
+    void init();
     double healthP;
     Bullet** pBullet;
     // hockey

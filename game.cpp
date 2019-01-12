@@ -145,6 +145,17 @@ Character::Character(double x, double y, int playerID){
         pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
         bulletCount = 0;
         count = 0;
+        
+        healthP_init = 100;
+        position_x_init = x;
+        position_y_init = y;
+        id_init = 1;
+        direction_init = RIGHT;
+        speed_init = 0;
+        angV_init = PI / FPS / 2;
+        moving_init = false;
+        bulletCount_init = 0;
+        count_init = 0;
     }
     else if(playerID == 2){
         healthP = 100;
@@ -155,9 +166,19 @@ Character::Character(double x, double y, int playerID){
         speed = 0;
         angV = PI / FPS / 2;
         moving = false;
-        pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
         bulletCount = 0;
         count = 0;
+        
+        healthP_init = 100;
+        position_x_init = x;
+        position_y_init = y;
+        id_init = 2;
+        direction_init = LEFT;
+        speed_init = 0;
+        angV_init = PI / FPS / 2;
+        moving_init = false;
+        bulletCount_init = 0;
+        count_init = 0;
     }
 }
 void Character::drawCharacter(){
@@ -216,6 +237,17 @@ Mirror::Mirror(double x, double y, int playerID, double _size, double _direction
         moving = false;
         reflectable = true;
         size = _size;
+        
+        
+        position_x_init = x;
+        position_y_init = y;
+        id_init = 1;
+        direction_init = UP_LEFT;
+        speed_init = 3;
+        angV_init = PI / FPS / 2;
+        moving_init = false;
+        reflectable_init = true;
+        size_init = _size;
     }
     else if(playerID == 2){
         position_x = x;
@@ -227,6 +259,16 @@ Mirror::Mirror(double x, double y, int playerID, double _size, double _direction
         moving = false;
         reflectable = true;
         size = _size;
+        
+        position_x_init = x;
+        position_y_init = y;
+        id_init = 2;
+        direction_init = DOWN_RIGHT;
+        speed_init = 3;
+        angV_init = PI / FPS / 2;
+        moving_init = false;
+        reflectable_init = true;
+        size_init = _size;
     }
     else{
         position_x = x;
@@ -302,6 +344,30 @@ void Obstacle::drawObstacle()
 {
     glColor3f(.0, .0, .0);
     glRectd(coodLD_x,coodLD_y , coodRT_x, coodRT_y);
+}
+void Character::init(){
+	healthP = healthP_init;
+    position_x = position_x_init;
+    position_y = position_y_init;
+    id = id_init;
+    direction = direction_init;
+    speed = speed_init;
+    angV = angV_init;
+    moving = moving_init;
+    pBullet = new Bullet*[MAX_BULLET_ON_PLANE];
+    bulletCount = bulletCount_init;
+    count = count_init;
+}
+void Mirror::init(){
+	position_x = position_x_init;
+    position_y = position_y_init;
+    id = id_init;
+    direction = direction_init;
+    speed = speed_init;
+    angV = angV_init;
+    moving = moving_init;
+    reflectable = reflectable_init;
+    size = size_init;
 }
 Mirror::~Mirror(){
     

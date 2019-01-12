@@ -8,6 +8,7 @@
 #include <GL\glut.h>//??DevC++??????? #include <GL\openglut.h>
 #include <cstring>
 #include <cmath>
+#include <ctime>
 #include "game.h"
 #include "button.h"
 using namespace std;
@@ -31,7 +32,7 @@ Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
 Button start("start", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 32, 172, 64);
 Button tutorial("tutorial", MAP_WIDTH / 2 - 86, MAP_HEIGHT / 2 - 116, 172, 64) ;
 Button quit("quit", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 200, 172 , 64);
-Button back("mod1", MAP_WIDTH / 2 + 300, MAP_HEIGHT / 2 - 300, 172, 64);
+Button back("menu", MAP_WIDTH / 2 + 300, MAP_HEIGHT / 2 - 300, 172, 64);
 Button tutorialBg("tutorialBackground", 0, 0, 1000, 720);
 Button close("close_1", 0, 0, 1000, 720);
 Button backGround("shit", 0, 0, 1080, 720);
@@ -39,6 +40,8 @@ Button yes("yes" , MAP_WIDTH / 2 - 278 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
 Button no("no" , MAP_WIDTH / 2 + 86 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
 Button mod1("mod1", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 + 96, 344, 128);
 Button mod2("mod2", MAP_WIDTH / 2 - 172 , MAP_HEIGHT / 2 - 96, 344, 128);
+Button blueWin("bluewin", 0, 0, MAP_WIDTH, MAP_HEIGHT);
+Button redWin("redwin", 0, 0, MAP_WIDTH, MAP_HEIGHT);
 double music = 0.5;
 double sound = 0.5;
 Obstacle **tree = new Obstacle *[5];
@@ -77,8 +80,8 @@ int main(int argc, char** argv)
     glutKeyboardFunc(Keyboard);
     glutKeyboardUpFunc(KeyboardUp);
     glutDisplayFunc(Display);
-    glutTimerFunc(100, Timer, 0);
-    glutTimerFunc(100, ShootTimer, 0);
+    glutTimerFunc(0, Timer, 0);
+    glutTimerFunc(0, ShootTimer, 0);
     glutMainLoop();
     return 0;
 }
@@ -166,6 +169,7 @@ void Display(void)
 				glTexCoord2f(1, 0); glVertex2f(MAP_WIDTH / 2 - 256 + 512, MAP_HEIGHT / 2 + 128 - 256);
 				glTexCoord2f(1, 1); glVertex2f(MAP_WIDTH / 2 - 256 + 512, MAP_HEIGHT / 2 + 128);
 			glEnd();
+			back.drawButton();
 		}
 		glutSwapBuffers();
 	}
@@ -204,47 +208,36 @@ void Display(void)
                     BulletForHockey[i]->drawBullet();
             }
         }
-        
+        if(gamePause){
+			glColor4f(0, 0, 0, 0.5);
+			glRectd(0, 0, MAP_WIDTH, MAP_HEIGHT);
+			glColor3f(0.75, 0.75, 0.75);
+			glLoadIdentity();
+			GLuint setting_text_1;
+			loadTexture("pause.bmp", setting_text_1);
+			glBindTexture(GL_TEXTURE_2D, setting_text_1);
+			glBegin(GL_POLYGON);
+				glTexCoord2f(0, 1); glVertex2f(MAP_WIDTH / 2 - 256 , MAP_HEIGHT / 2 + 128);
+				glTexCoord2f(0, 0); glVertex2f(MAP_WIDTH / 2 - 256 , MAP_HEIGHT / 2 + 128 - 256);
+				glTexCoord2f(1, 0); glVertex2f(MAP_WIDTH / 2 - 256 + 512, MAP_HEIGHT / 2 + 128 - 256);
+				glTexCoord2f(1, 1); glVertex2f(MAP_WIDTH / 2 - 256 + 512, MAP_HEIGHT / 2 + 128);
+			glEnd();
+			back.drawButton();
+		}
         glutSwapBuffers();
     }
     if(mode == GAME_RED_WIN)
     {
-        glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
-        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glColor3f(.0,.0,.0);
-        gluLookAt(0,0,10.0f,0,0,0,0,1,0);
-        GLuint redwin;
-        loadTexture("redwin.bmp", redwin);
-        glBindTexture(GL_TEXTURE_2D, redwin);
-        glBegin(GL_POLYGON);
-        glTexCoord2f(0, 1); glVertex2f( MAP_WIDTH , 0 );
-        glTexCoord2f(0, 0); glVertex2f( 0 , 0 );
-        glTexCoord2f(1, 0); glVertex2f( 0 , MAP_HEIGHT );
-        glTexCoord2f(1, 1); glVertex2f( MAP_WIDTH , MAP_HEIGHT );
-        glEnd();
-        
+        redWin.drawButton();
+		back.drawButton();      
+		glutPostRedisplay();  
         glutSwapBuffers();
     }
     if(mode == GAME_BLUE_WIN)
     {
-        glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
-        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glColor3f(.0,.0,.0);
-        gluLookAt(0,0,10.0f,0,0,0,0,1,0);
-        GLuint bluewin;
-        loadTexture("bluewin.bmp", bluewin);
-        glBindTexture(GL_TEXTURE_2D, bluewin);
-        glBegin(GL_POLYGON);
-        glTexCoord2f(0, 1); glVertex2f( MAP_WIDTH , 0 );
-        glTexCoord2f(0, 0); glVertex2f( 0 , 0 );
-        glTexCoord2f(1, 0); glVertex2f( 0 , MAP_HEIGHT );
-        glTexCoord2f(1, 1); glVertex2f( MAP_WIDTH , MAP_HEIGHT );
-        glEnd();
-        
+        blueWin.drawButton();
+		back.drawButton();	
+		glutPostRedisplay();  
         glutSwapBuffers();
     }
 }
@@ -258,8 +251,8 @@ void Mouse(int button, int state, int x, int y){
 				glutSwapBuffers();
 			}
 			if(state == 1){
-				glutPostRedisplay();
 				mode = GAME_MODE_SELECT;
+				glutPostRedisplay();
 				cout << "game start\n";
 			}
 		}
@@ -287,7 +280,6 @@ void Mouse(int button, int state, int x, int y){
 					glutPostRedisplay();
 			}
 		}
-		cout << start.onButton(x, y) << " " << tutorial.onButton(x, y) << " " << quit.onButton(x, y) << endl;
 	}
 	else if(mode == GAME_TUTORIAL)
 	{
@@ -367,7 +359,11 @@ void Mouse(int button, int state, int x, int y){
 			if(state)
 			{
 				mode = GAME_MODE_1;
-				glutPostRedisplay() ;
+				_1p.init();
+				_2p.init();
+				_1pMirror.init();
+				_2pMirror.init();
+				glutPostRedisplay();
 			}
 		}
 		if(mod2.onButton(x, y)){
@@ -381,6 +377,10 @@ void Mouse(int button, int state, int x, int y){
 			if(state)
 			{
 				mode = GAME_MODE_2;
+				_1p.init();
+				_2p.init();
+				_1pMirror.init();
+				_2pMirror.init();
 				glutPostRedisplay() ;
 			}
 		}
@@ -398,6 +398,42 @@ void Mouse(int button, int state, int x, int y){
 				mode = GAME_MENU ;
 				glutPostRedisplay() ;
 			}
+		}
+	}
+	else if(mode == GAME_MODE_1){
+		if(gamePause && back.onButton(x, y)){
+			back.clicked();
+			mode = GAME_MENU;
+			gamePause = false;
+			glutPostRedisplay();
+			glutSwapBuffers();
+		}
+	}
+	else if(mode == GAME_MODE_2){
+		if(gamePause && back.onButton(x, y)){
+			back.clicked();
+			mode = GAME_MENU;
+			gamePause = false;
+			glutPostRedisplay();
+			glutSwapBuffers();
+		}
+	}
+	else if(mode == GAME_RED_WIN){
+		if(back.onButton(x, y)){
+			back.clicked();
+			mode = GAME_MENU;
+			gamePause = false;
+			glutPostRedisplay();
+			glutSwapBuffers();
+		}
+	}
+	else if(mode == GAME_BLUE_WIN){
+		if(back.onButton(x, y)){
+			back.clicked();
+			mode = GAME_MENU;
+			gamePause = false;
+			glutPostRedisplay();
+			glutSwapBuffers();
 		}
 	}
 	glutPostRedisplay();
@@ -427,7 +463,7 @@ void Keyboard(unsigned char key, int x, int y)
         	break;
 		}
 	}
-    if(mode = GAME_MODE_2)
+    if(mode == GAME_MODE_2)
     {
         switch(key){
                 //3 ;start game
@@ -436,7 +472,11 @@ void Keyboard(unsigned char key, int x, int y)
                 BulletGeneratorStart = true;
                 glutPostRedisplay();
                 keyStates['3'] = true;
-                
+                break;
+	        case(27):
+	        	gamePause = !gamePause;
+	        	glutPostRedisplay();
+	        	break;
             default:
                 keyStates[key] = true;
                 break;
@@ -464,7 +504,7 @@ void KeyboardUp(unsigned char key, int x, int y){
 	            break;
 		}
 	}
-    if(mode = GAME_MODE_2)
+    if(mode == GAME_MODE_2)
     {
         switch(key){
             case('a'):
@@ -496,7 +536,7 @@ void ShootTimer(int)
 }
 void Timer(int)
 {
-    if(mode == GAME_MODE_1){
+    if(mode == GAME_MODE_1 && !gamePause){
     	if(keyStates['g'] == true)
 	    {
 	        _1pMirror.move(UP);
@@ -687,11 +727,10 @@ void Timer(int)
 	                _2p.pBullet[i]->live = false;
 	            }
 	        }
-	    }
+		}
+	    glutPostRedisplay();
 	}
-    glutPostRedisplay();
-    glutTimerFunc(1000 / FPS, Timer, 0);
-    if(mode == GAME_MODE_2){
+    if(mode == GAME_MODE_2 && !gamePause){
         if(keyStates['g'] == true)
             _1pMirror.move(UP);
         if(keyStates['v'] == true)
@@ -801,13 +840,14 @@ void Timer(int)
                 }
                 if(abs(BulletForHockey[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 + BulletSize * 1.5 && abs(BulletForHockey[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2  + BulletSize * 1.5){
                     if(BulletForHockey[i]->live){
-                        _2p.healthP -= BulletForHockey[i]->get_atk();
+                        _1p.healthP -= BulletForHockey[i]->get_atk();
                         cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
                         BulletForHockey[i]->live = false;
                     }
-                }
+                }   
+				
             }
-            //i want to stop the game
+			//i want to stop the game
             int count = 0;
             for(int i = 1 ; i <= 3 ; i++)
             {
@@ -815,17 +855,19 @@ void Timer(int)
                     count++;
             }
             //need to modified (connect to endgame page)
-            
              if(count == 3)//bullet have all disappeared now we can end game
              {
              if(_1p.healthP > _2p.healthP) //
-             mode = GAME_RED_WIN;
+             	mode = GAME_RED_WIN;
              else
-             mode = GAME_BLUE_WIN;
+             	mode = GAME_BLUE_WIN;
+             BulletGeneratorStart = false;
              }
-            
-        }
+             
+        } 
+	    glutPostRedisplay();
 	}
+	glutTimerFunc(1000 / FPS, Timer, 0);
 }
 void WindowSize(int w, int h)
 {

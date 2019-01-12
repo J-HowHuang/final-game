@@ -18,9 +18,14 @@ Button::Button(char* buttonName, double  x, double y, double _width, double _hei
 	height = _height ;
 }
 void Button::drawButton(){
+	
 	char* filename = new char[MAX_BUTTON_NAME_LENGTH];
 	strcpy(filename, name);
 	strcat(filename, ".bmp");
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glColor3f(1.0,1.0,1.0);
 	buttonLoadTexture(filename, id);
 	glBindTexture(GL_TEXTURE_2D, id);
 	glColor3f(1, 1, 1);
@@ -32,10 +37,6 @@ void Button::drawButton(){
 	glEnd();
 }
 bool Button::onButton(double x, double y){
-/*	cout << name << endl;
-	cout << "x: " << position_x << " to " << position_x + width << endl;	
-	cout << "y: " << position_y << " to " << position_y + height << endl;
-	cout << x << " " << y << endl;*/
 	if(x > position_x && x < position_x + width && y < MAP_HEIGHT - position_y && y > MAP_HEIGHT - position_y - height)
 		return true;
 	else
