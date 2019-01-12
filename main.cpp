@@ -207,6 +207,26 @@ void Display(void)
         
         glutSwapBuffers();
     }
+    if(mode == GAME_RED_WIN)
+    {
+        glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
+        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glColor3f(.0,.0,.0);
+        gluLookAt(0,0,10.0f,0,0,0,0,1,0);
+        GLuint redwin;
+        loadTexture("redwin.bmp", redwin);
+        glBindTexture(GL_TEXTURE_2D, redwin);
+        glBegin(GL_POLYGON);
+        glTexCoord2f(0, 1); glVertex2f( MAP_WIDTH , 0 );
+        glTexCoord2f(0, 0); glVertex2f( 0 , 0 );
+        glTexCoord2f(1, 0); glVertex2f( 0 , MAP_HEIGHT );
+        glTexCoord2f(1, 1); glVertex2f( MAP_WIDTH , MAP_HEIGHT );
+        glEnd();
+        
+        glutSwapBuffers();
+    }
 }
 void Mouse(int button, int state, int x, int y){
 	if(mode == GAME_MENU){
@@ -800,15 +820,15 @@ void Timer(int)
                     count++;
             }
             //need to modified (connect to endgame page)
-            /*
+            
              if(count == 3)//bullet have all disappeared now we can end game
              {
              if(_1p.live > _2p.live) //
-             mode = _1p_Win;
+             mode = GAME_RED_WIN;
              else
-             mode = _2p_Win;
+             mode = GAME_BLUE_WIN;
              }
-             */
+            
         }
 }
 void WindowSize(int w, int h)

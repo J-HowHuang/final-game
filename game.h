@@ -37,6 +37,8 @@
 #define GAME_MODE_SELECT 6
 #define GAME_TUTORIAL 7
 #define GAME_CLOSE 8
+#define GAME_RED_WIN 9
+#define GAME_BLUE_WIN 10
 #define OBSTACLE_WIDTH  100
 class Obstacle
 {
