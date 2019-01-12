@@ -4,6 +4,7 @@
 #include<Mmsystem.h>
 #include "button.h"
 #include "bitmap.h"
+#include "game.h"
 #include <cstring>
 #include <iostream>
 using namespace std;
@@ -35,7 +36,7 @@ bool Button::onButton(double x, double y){
 	cout << "x: " << position_x << " to " << position_x + width << endl;	
 	cout << "y: " << position_y << " to " << position_y + height << endl;
 	cout << x << " " << y << endl;*/
-	if(x > position_x && x < position_x + width && y > position_y && y < position_y + height)
+	if(x > position_x && x < position_x + width && y < MAP_HEIGHT - position_y && y > MAP_HEIGHT - position_y - height)
 		return true;
 	else
 		return false;
