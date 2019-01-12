@@ -56,6 +56,9 @@ bool closePressed = false ;
 bool yesPressed = false ;
 bool noPressed = false ;
 bool backPressed = false ;
+//for game mode 2
+bool  BulletGeneratorStart = false;
+Bullet **BulletForHockey;
 int main(int argc, char** argv)
 {
     tree[1] = new Obstacle(500,360,500 + OBSTACLE_WIDTH,360 + OBSTACLE_WIDTH);
@@ -178,6 +181,32 @@ void Display(void)
 		mod2.drawButton();
 		glutSwapBuffers();
 	}
+    if(mode == GAME_MODE_2){
+        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        gluLookAt(0,0,10.0f,0,0,0,0,1,0);
+        _1p.drawCharacter();
+        _2p.drawCharacter();
+        _1pMirror.drawMirror();
+        _2pMirror.drawMirror();
+        margin1.drawMirror();
+        margin2.drawMirror();
+        margin3.drawMirror();
+        margin4.drawMirror();
+        
+        if(BulletGeneratorStart)
+        {
+            for(int i = 1 ; i <= 3  ; i++)
+            {
+                if(BulletForHockey[i]->live)
+                    BulletForHockey[i]->drawBullet();
+            }
+        }
+        
+        glutSwapBuffers();
+    }
 }
 void Mouse(int button, int state, int x, int y){
 	if(mode == GAME_MENU){
@@ -383,19 +412,36 @@ void Keyboard(unsigned char key, int x, int y)
         	break;
 		}
 	}
+    if(mode = GAME_MODE_2)
+    {
+        switch(key){
+                //3 ;start game
+            case('3'):
+                BulletForHockey = BulletGenerator(3);
+                BulletGeneratorStart = true;
+                glutPostRedisplay();
+                keyStates['3'] = true;
+                
+            default:
+                keyStates[key] = true;
+                break;
+        }
+    }
 }
 void KeyboardUp(unsigned char key, int x, int y){
+    //a:1p propel toward mirror
+    //u:2p propel toward mirror
 	if(mode == GAME_MODE_1){
 		switch(key){
-	        case('2'):
+	        case('a'):
 	            _1p.moveTowardMirror(_1pMirror);
 	            glutPostRedisplay();
-	            keyStates['2'] = false;
+	            keyStates['a'] = false;
 	            break;
-	        case('1'):
+	        case('u'):
 	            _2p.moveTowardMirror(_2pMirror);
 	            glutPostRedisplay();
-	            keyStates['1'] = false;
+	            keyStates['u'] = false;
 	            break;
 	            
 	        default:
@@ -403,6 +449,24 @@ void KeyboardUp(unsigned char key, int x, int y){
 	            break;
 		}
 	}
+    if(mode = GAME_MODE_2)
+    {
+        switch(key){
+            case('a'):
+                _1p.moveTowardMirror(_1pMirror);
+                glutPostRedisplay();
+                keyStates['a'] = false;
+                break;
+            case('u'):
+                _2p.moveTowardMirror(_2pMirror);
+                glutPostRedisplay();
+                keyStates['u'] = false;
+                break;
+            default:
+                keyStates[key] = false;
+                break;
+        }
+    }
     
 }
 void ShootTimer(int)
@@ -612,6 +676,140 @@ void Timer(int)
 	}
     glutPostRedisplay();
     glutTimerFunc(1000 / FPS, Timer, 0);
+    if(mode == GAME_MODE_2){
+        if(keyStates['g'] == true)
+            _1pMirror.move(UP);
+        if(keyStates['v'] == true)
+            _1pMirror.move(LEFT);
+        if(keyStates['b'] == true)
+            _1pMirror.move(DOWN);
+        if(keyStates['n'] == true)
+            _1pMirror.move(RIGHT);
+        if(keyStates['l'] == true)
+            _2pMirror.move(UP);
+        if(keyStates[','] == true)
+            _2pMirror.move(LEFT);
+        if(keyStates['.'] == true)
+            _2pMirror.move(DOWN);
+        if(keyStates['/'] == true)
+            _2pMirror.move(RIGHT);
+        //
+        if(keyStates['f'] == true)
+            _1pMirror.rotate(1);
+        if(keyStates['h'] == true)
+            _1pMirror.rotate(-1);
+        if(keyStates['k'] == true)
+            _2pMirror.rotate(1);
+        if(keyStates[';'] == true)
+            _2pMirror.rotate(-1);
+        if(keyStates['q'] == true)
+            _1p.rotate(1);
+        if(keyStates['e'] == true)
+            _1p.rotate(-1);
+        if(keyStates['6'] == true)
+            _2p.rotate(1);
+        if(keyStates['8'] == true)
+            _2p.rotate(-1);
+        if(_1p.get_x() > MAP_WIDTH)
+            _1p.set_x(MAP_WIDTH);
+        if(_1p.get_x() < 0)
+            _1p.set_x(0);
+        if(_1p.get_y() > MAP_HEIGHT)
+            _1p.set_y(MAP_HEIGHT);
+        if(_1p.get_y() < 0)
+            _1p.set_y(0);
+        if(_2p.get_x() > MAP_WIDTH)
+            _2p.set_x(MAP_WIDTH);
+        if(_2p.get_x() < 0)
+            _2p.set_x(0);
+        if(_2p.get_y() > MAP_HEIGHT)
+            _2p.set_y(MAP_HEIGHT);
+        if(_2p.get_y() < 0)
+            _2p.set_y(0);
+        
+        if(_1pMirror.get_x() > MAP_WIDTH)
+            _1pMirror.set_x(MAP_WIDTH);
+        if(_1pMirror.get_x() < 0)
+            _1pMirror.set_x(0);
+        if(_1pMirror.get_y() > MAP_HEIGHT)
+            _1pMirror.set_y(MAP_HEIGHT);
+        if(_1pMirror.get_y() < 0)
+            _1pMirror.set_y(0);
+        if(_2pMirror.get_x() > MAP_WIDTH)
+            _2pMirror.set_x(MAP_WIDTH);
+        if(_2pMirror.get_x() < 0)
+            _2pMirror.set_x(0);
+        if(_2pMirror.get_y() > MAP_HEIGHT)
+            _2pMirror.set_y(MAP_HEIGHT);
+        if(_2pMirror.get_y() < 0)
+            _2pMirror.set_y(0);
+        //
+        if(_1p.times != 0)
+        {
+            _1p.move();
+            _1p.count++;
+            if(_1p.count == _1p.times)
+            {
+                _1p.count = 0;
+                _1p.times = 0;
+                _1p.setSpeed(0);
+            }
+        }
+        if(_2p.times != 0)
+        {
+            _2p.move();
+            _2p.count++;
+            if(_2p.count == _2p.times)
+            {
+                _2p.count = 0;
+                _2p.times = 0;
+                _2p.setSpeed(0);
+            }
+        }
+        if(BulletGeneratorStart)
+        {
+            for(int i = 1 ; i <= 3 ; i++)
+            {
+                BulletForHockey[i]->move();
+                BulletForHockey[i]->reflect(_1pMirror);
+                BulletForHockey[i]->reflect(_2pMirror);
+                BulletForHockey[i]->reflect(margin1);
+                BulletForHockey[i]->reflect(margin2);
+                BulletForHockey[i]->reflect(margin3);
+                BulletForHockey[i]->reflect(margin4);
+                if(abs(BulletForHockey[i]->get_x() - _2p.get_x()) < CHAR_WIDTH / 2 + BulletSize * 1.5 && abs(BulletForHockey[i]->get_y() - _2p.get_y()) < CHAR_HEIGHT / 2 + BulletSize * 1.5){
+                    if(BulletForHockey[i]->live){
+                        _2p.healthP -= BulletForHockey[i]->get_atk();
+                        cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
+                        BulletForHockey[i]->live = false;
+                    }
+                }
+                if(abs(BulletForHockey[i]->get_x() - _1p.get_x()) < CHAR_WIDTH / 2 + BulletSize * 1.5 && abs(BulletForHockey[i]->get_y() - _1p.get_y()) < CHAR_HEIGHT / 2  + BulletSize * 1.5){
+                    if(BulletForHockey[i]->live){
+                        _2p.healthP -= BulletForHockey[i]->get_atk();
+                        cout << "1P: " << _1p.healthP << " 2P: " << _2p.healthP << endl;
+                        BulletForHockey[i]->live = false;
+                    }
+                }
+            }
+            //i want to stop the game
+            int count = 0;
+            for(int i = 1 ; i <= 3 ; i++)
+            {
+                if(BulletForHockey[i]->live == false)
+                    count++;
+            }
+            //need to modified (connect to endgame page)
+            /*
+             if(count == 3)//bullet have all disappeared now we can end game
+             {
+             if(_1p.live > _2p.live) //
+             mode = _1p_Win;
+             else
+             mode = _2p_Win;
+             }
+             */
+        }
 }
 void WindowSize(int w, int h)
 {

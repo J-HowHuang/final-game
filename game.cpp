@@ -32,6 +32,17 @@ Bullet::Bullet(double x, double y, double direction_,int playerID)
         attack = 1;
         live = true;
     }
+    //for hockey
+    else if(playerID == 4)
+    {
+        position_x = x;
+        position_y = y;
+        id = 4;
+        direction = direction_;
+        speed = 7;
+        attack = 1;
+        live = true;
+    }
 }
 void Bullet::drawBullet()
 {
@@ -55,6 +66,19 @@ void Bullet::drawBullet()
         //glRectd(position_x - bullet_size / 2 , position_y - bullet_size / 2, position_x + bullet_size / 2, position_y + bullet_size / 2);
         glBegin(GL_POLYGON);
         glColor3f(.0, .0, 1.0);
+        for(int i = 1 ; i <= 24 ; i++ )
+        {
+            glVertex2f(position_x + bullet_size / 2 * cos(2 * PI/24 * i), position_y + bullet_size / 2 * sin(2 * PI/24 * i));
+            //glTexCoord2f(position_x + cos(PI/24 * i), position_y + sin(PI/24 * i));
+        }
+        glEnd();
+    }
+    //for Hockey
+    else if(id == 4)
+    {
+        
+        glBegin(GL_POLYGON);
+        glColor3f(.0, .0, .0);
         for(int i = 1 ; i <= 24 ; i++ )
         {
             glVertex2f(position_x + bullet_size / 2 * cos(2 * PI/24 * i), position_y + bullet_size / 2 * sin(2 * PI/24 * i));
@@ -303,4 +327,25 @@ void loadTexture(char* filename, GLuint id){
 Obstacle::~Obstacle()
 {
     
+}
+Bullet **BulletGenerator(int num)
+{
+    Bullet **BulletForHockey = new Bullet *[num + 1];
+    int *hockey = new int [num + 1];
+    srand(clock());
+    for(int i = 1 ; i <= num ; i++ )
+    {
+        
+        hockey[i] = rand()/24;
+        while(hockey[i] == 12||hockey[i] == 0)
+        {
+            srand(45678*12345 + i);
+            hockey[i] = rand()/24;
+        }
+    }
+    for(int i = 1 ; i <= num ; i++ )
+    {
+        BulletForHockey[i] = new Bullet(MAP_WIDTH/2,MAP_HEIGHT/2,PI/12*hockey[i],4);
+    }
+    return BulletForHockey;
 }
