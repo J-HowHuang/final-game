@@ -90,7 +90,7 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-		backGround.drawButton() ;
+		//backGround.drawButton() ;
 		start.drawButton() ;
 		tutorial.drawButton() ;
 		quit.drawButton() ;
@@ -175,48 +175,6 @@ void Display(void)
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
 //<<<<<<< HEAD
 		back.drawButton() ;
-		/*GLuint mode1_button;
-		loadTexture("mod1.bmp", mode1_button);
-		glBindTexture(GL_TEXTURE_2D, mode1_button);
-		glBegin(GL_POLYGON);
-			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
-			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
-			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
-			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
-		glEnd();
-		if(mode1Pressed){
-			GLuint mode1_button_pressed;
-			loadTexture("mod1_pressed.bmp", mode1_button_pressed);
-			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
-			glBegin(GL_POLYGON);
-				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
-				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
-				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
-				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
-			glEnd();
-		}
-		GLuint mode2_button;
-		loadTexture("mod2.bmp", mode2_button);
-		glBindTexture(GL_TEXTURE_2D, mode2_button);
-		glBegin(GL_POLYGON);
-			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
-			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
-			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
-			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
-		glEnd();
-		/*if(mode2Pressed){
-			GLuint mode2_button_pressed;
-			loadTexture("mod2_pressed.bmp", mode2_button_pressed);
-			glBindTexture(GL_TEXTURE_2D, mode2_button_pressed);
-			glBegin(GL_POLYGON);
-				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
-				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
-				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
-				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
-			glEnd();
-		}*/
-//=======
-//>>>>>>> fc99fb040cb93cea63a707b4b8639b854bcd558c
 		mod1.drawButton();
 		mod2.drawButton();
 		glutSwapBuffers();
@@ -229,6 +187,7 @@ void Mouse(int button, int state, int x, int y){
 				start.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay(); 
+				glutSwapBuffers();
 			}
 			if(state == 1){
 				mode = GAME_MODE_SELECT;
@@ -241,6 +200,7 @@ void Mouse(int button, int state, int x, int y){
 				tutorial.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
+				glutSwapBuffers();
 			}
 			if(state){
 				mode = GAME_TUTORIAL ;
@@ -252,6 +212,7 @@ void Mouse(int button, int state, int x, int y){
 				quit.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
+				glutSwapBuffers();
 			}
 			if(state){
 					mode = GAME_CLOSE ;
@@ -268,13 +229,14 @@ void Mouse(int button, int state, int x, int y){
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-		if(x > START_BUTTON_LEFT + 386 && x < START_BUTTON_RIGHT + 386  && y > START_BUTTON_BOT + 268 && y < START_BUTTON_UP + 268 )
+		if(back.onButton(x, y))
 		{
 			if(state == 0)
 			{
-				backPressed = true;
+				back.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
+				glutSwapBuffers();
 			}
 			if(state)
 			{
@@ -293,26 +255,28 @@ void Mouse(int button, int state, int x, int y){
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-		if(x > START_BUTTON_LEFT - 192 && x < START_BUTTON_RIGHT - 192 && y > START_BUTTON_BOT + 84 && y < START_BUTTON_UP + 84 )
+		if(yes.onButton(x, y))
 		{
 			if(state == 0)
 			{
-				yesPressed = true;
+				yes.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
+				glutSwapBuffers();
 			}
 			if(state)
 			{
 				glutDestroyWindow(glutCreateWindow(GAME_NAME));
 			}
 		}
-		else if(x > START_BUTTON_LEFT + 192 && x < START_BUTTON_RIGHT + 192  && y > START_BUTTON_BOT + 84 && y < START_BUTTON_UP + 84 )
+		else if(no.onButton(x, y))
 		{
 			if(state == 0)
 			{
-				noPressed = true;
+				no.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
+				glutSwapBuffers();
 			}
 			if(state)
 			{
@@ -350,6 +314,7 @@ void Mouse(int button, int state, int x, int y){
 				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 			glEnd();
+			glutSwapBuffers();
 		}
 		
 		GLuint mode2_button;
@@ -372,14 +337,16 @@ void Mouse(int button, int state, int x, int y){
 				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
 			glEnd();
+			glutSwapBuffers();
 		}
-		if(x > START_BUTTON_LEFT + 386 && x < START_BUTTON_RIGHT + 386  && y > START_BUTTON_BOT + 268 && y < START_BUTTON_UP + 268 )
+		if(back.onButton(x , y))
 		{
 			if(state == 0)
 			{
-				backPressed = true;
+				back.clicked();
 				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				glutPostRedisplay();
+				glutSwapBuffers();
 			}
 			if(state)
 			{
