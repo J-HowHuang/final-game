@@ -5,18 +5,22 @@
 #include "button.h"
 #include "bitmap.h"
 #include <cstring>
+#include <iostream>
+using namespace std;
 void buttonLoadTexture(char*, GLuint);
 Button::Button(char* buttonName, double  x, double y, double _width, double _height){
 	name = new char[MAX_BUTTON_NAME_LENGTH];
 	strcpy(name, buttonName);
-	strcat(name, ".bmp");
 	position_x = x;
 	position_y = y;
 	width = _width ;
 	height = _height ;
 }
 void Button::drawButton(){
-	buttonLoadTexture(name, id);
+	char* filename = new char[MAX_BUTTON_NAME_LENGTH];
+	strcpy(filename, name);
+	strcat(filename, ".bmp");
+	buttonLoadTexture(filename, id);
 	glBindTexture(GL_TEXTURE_2D, id);
 	glColor3f(1, 1, 1);
 	glBegin(GL_POLYGON);
@@ -27,6 +31,10 @@ void Button::drawButton(){
 	glEnd();
 }
 bool Button::onButton(double x, double y){
+/*	cout << name << endl;
+	cout << "x: " << position_x << " to " << position_x + width << endl;	
+	cout << "y: " << position_y << " to " << position_y + height << endl;
+	cout << x << " " << y << endl;*/
 	if(x > position_x && x < position_x + width && y > position_y && y < position_y + height)
 		return true;
 	else
@@ -34,7 +42,8 @@ bool Button::onButton(double x, double y){
 }
 void Button::clicked(){
 	char* filename = new char[MAX_BUTTON_NAME_LENGTH];
-	filename = strcat(name, "_clicked.bmp");
+	strcpy(filename, name);
+	strcat(filename, "_clicked.bmp");
 	buttonLoadTexture(filename, id);
 	glBindTexture(GL_TEXTURE_2D, id);
 	glColor3f(1, 1, 1);
