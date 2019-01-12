@@ -227,6 +227,26 @@ void Display(void)
         
         glutSwapBuffers();
     }
+    if(mode == GAME_BLUE_WIN)
+    {
+        glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
+        glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glColor3f(.0,.0,.0);
+        gluLookAt(0,0,10.0f,0,0,0,0,1,0);
+        GLuint bluewin;
+        loadTexture("bluewin.bmp", bluewin);
+        glBindTexture(GL_TEXTURE_2D, bluewin);
+        glBegin(GL_POLYGON);
+        glTexCoord2f(0, 1); glVertex2f( MAP_WIDTH , 0 );
+        glTexCoord2f(0, 0); glVertex2f( 0 , 0 );
+        glTexCoord2f(1, 0); glVertex2f( 0 , MAP_HEIGHT );
+        glTexCoord2f(1, 1); glVertex2f( MAP_WIDTH , MAP_HEIGHT );
+        glEnd();
+        
+        glutSwapBuffers();
+    }
 }
 void Mouse(int button, int state, int x, int y){
 	if(mode == GAME_MENU){
