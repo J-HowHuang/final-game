@@ -173,7 +173,6 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-//<<<<<<< HEAD
 		back.drawButton() ;
 		mod1.drawButton();
 		mod2.drawButton();
@@ -285,16 +284,16 @@ void Mouse(int button, int state, int x, int y){
 			}
 		}
 		glEnd();
-		//glutSwapBuffers();
+	//	glutSwapBuffers();
 	}
 	if(mode == GAME_MODE_SELECT){
-//<<<<<<< HEAD
 		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
 		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+//<<<<<<< HEAD
 		GLuint mode1_button;
 		loadTexture("mod1.bmp", mode1_button);
 		glBindTexture(GL_TEXTURE_2D, mode1_button);
@@ -340,6 +339,9 @@ void Mouse(int button, int state, int x, int y){
 			glutSwapBuffers();
 		}
 		if(back.onButton(x , y))
+//=======
+		if(x > START_BUTTON_LEFT + 386 && x < START_BUTTON_RIGHT + 386  && y > START_BUTTON_BOT + 268 && y < START_BUTTON_UP + 268 )
+//>>>>>>> 2db2c0142a2017907d6ce727b3dc8bdb7c0887b7
 		{
 			if(state == 0)
 			{
@@ -355,9 +357,7 @@ void Mouse(int button, int state, int x, int y){
 			}
 		}
 	}
-//=======
-//>>>>>>> fc99fb040cb93cea63a707b4b8639b854bcd558c
-	//glutSwapBuffers();
+	glutSwapBuffers();
 	
 }
 void Keyboard(unsigned char key, int x, int y)
