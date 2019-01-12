@@ -32,7 +32,11 @@ Mirror margin4(MAP_WIDTH - 3, MAP_HEIGHT / 2, 0, MAP_HEIGHT, RIGHT);
 Button start("start", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 32, 172, 64);
 Button tutorial("mod1", MAP_WIDTH / 2 - 86, MAP_HEIGHT / 2 - 116, 172, 64) ;
 Button quit("quit", MAP_WIDTH / 2 - 86 , MAP_HEIGHT / 2 - 200, 172, 64);
-Button back("back", MAP_WIDTH / 2 + 300, MAP_HEIGHT / 2 - 250, 172, 64);
+Button back("mod1", MAP_WIDTH / 2 + 300, MAP_HEIGHT / 2 - 300, 172, 64);
+Button tutorialBg("tutorialBackground", 0, 0, 1000, 720);
+Button close("close_1", 0, 0, 1000, 720);
+Button yes("mod1" , MAP_WIDTH / 2 - 278 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
+Button no("mod1" , MAP_WIDTH / 2 + 86 , MAP_HEIGHT / 2 - 116 , 172 , 64) ;
 double music = 0.5;
 double sound = 0.5;
 Obstacle **tree = new Obstacle *[5];
@@ -46,6 +50,9 @@ bool tutorialPressed = false;
 bool quitPressed = false;
 bool mode1Pressed = false;
 bool mode2Pressed = false;
+bool closePressed = false ;
+bool yesPressed = false ;
+bool noPressed = false ;
 bool backPressed = false ;
 int main(int argc, char** argv)
 {
@@ -54,7 +61,7 @@ int main(int argc, char** argv)
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1080,720);         //????
-    glutInitWindowPosition(600,80);         //????????
+    glutInitWindowPosition(100,0);         //????????
     glutCreateWindow(GAME_NAME);      //????
 	glEnable(GL_BLEND); 
 	glDisable(GL_DEPTH_TEST);
@@ -93,11 +100,12 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+		tutorialBg.drawButton() ;
 		back.drawButton() ;
 		glutSwapBuffers();
 		glEnd();
 	}
-	/*if(mode == GAME_CLOSE)
+	if(mode == GAME_CLOSE)
 	{
 		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
 		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
@@ -105,9 +113,11 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-		back.drawButton() ;
+		close.drawButton() ;
+		yes.drawButton() ;
+		no.drawButton() ;
 		glutSwapBuffers();
-	}*/
+	}
 	if(mode == GAME_MODE_1){
 		
 		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
@@ -160,16 +170,17 @@ void Display(void)
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+		back.drawButton() ;
 		GLuint mode1_button;
 		loadTexture("mod1.bmp", mode1_button);
 		glBindTexture(GL_TEXTURE_2D, mode1_button);
 		glBegin(GL_POLYGON);
-			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
-			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
-			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
-			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
+			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
+			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
+			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
+			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 		glEnd();
-	/*	if(mode1Pressed){
+		/*if(mode1Pressed){
 			GLuint mode1_button_pressed;
 			loadTexture("mod1_pressed.bmp", mode1_button_pressed);
 			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
@@ -180,17 +191,16 @@ void Display(void)
 				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 			glEnd();
 		}*/
-		
 		GLuint mode2_button;
 		loadTexture("mod2.bmp", mode2_button);
 		glBindTexture(GL_TEXTURE_2D, mode2_button);
 		glBegin(GL_POLYGON);
-			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
-			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
-			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
-			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
+			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
+			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
+			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
+			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
 		glEnd();
-	/*	if(mode2Pressed){
+		/*if(mode2Pressed){
 			GLuint mode2_button_pressed;
 			loadTexture("mod2_pressed.bmp", mode2_button_pressed);
 			glBindTexture(GL_TEXTURE_2D, mode2_button_pressed);
@@ -236,8 +246,9 @@ void Mouse(int button, int state, int x, int y){
 				glutPostRedisplay();
 			}
 			if(state){
-				
-				glutDestroyWindow(glutCreateWindow(GAME_NAME));
+					mode = GAME_CLOSE ;
+					glutPostRedisplay();
+				//glutDestroyWindow(glutCreateWindow(GAME_NAME));
 			}
 		}
 	}
@@ -249,7 +260,7 @@ void Mouse(int button, int state, int x, int y){
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-		if(x > START_BUTTON_LEFT + 386 && x < START_BUTTON_RIGHT + 386  && y > START_BUTTON_BOT + 218 && y < START_BUTTON_UP + 218 )
+		if(x > START_BUTTON_LEFT + 472 && x < START_BUTTON_RIGHT + 472  && y > START_BUTTON_BOT + 268 && y < START_BUTTON_UP + 268 )
 		{
 			if(state == 0)
 			{
@@ -261,7 +272,44 @@ void Mouse(int button, int state, int x, int y){
 			{
 				mode = GAME_MENU ;
 				glutPostRedisplay() ;
-				cout << "0" ;
+			}
+		}
+		glEnd();
+		glutSwapBuffers();
+	}
+	if(mode == GAME_CLOSE)
+	{
+		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
+		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glColor3f(1,1,1);
+		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
+		if(x > START_BUTTON_LEFT - 192 && x < START_BUTTON_RIGHT - 192 && y > START_BUTTON_BOT + 84 && y < START_BUTTON_UP + 84 )
+		{
+			if(state == 0)
+			{
+				yesPressed = true;
+				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				glutPostRedisplay();
+			}
+			if(state)
+			{
+				glutDestroyWindow(glutCreateWindow(GAME_NAME));
+			}
+		}
+		else if(x > START_BUTTON_LEFT + 192 && x < START_BUTTON_RIGHT + 192  && y > START_BUTTON_BOT + 84 && y < START_BUTTON_UP + 84 )
+		{
+			if(state == 0)
+			{
+				noPressed = true;
+				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				glutPostRedisplay();
+			}
+			if(state)
+			{
+				mode = GAME_MENU ;
+				glutPostRedisplay();
 			}
 		}
 		glEnd();
@@ -278,20 +326,20 @@ void Mouse(int button, int state, int x, int y){
 		loadTexture("mod1.bmp", mode1_button);
 		glBindTexture(GL_TEXTURE_2D, mode1_button);
 		glBegin(GL_POLYGON);
-			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
-			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
-			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
-			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
+			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
+			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
+			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
+			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 		glEnd();
 		if(mode1Pressed){
 			GLuint mode1_button_pressed;
-			loadTexture("mod1_pressed.bmp", mode1_button_pressed);
+			loadTexture("mod1_clickeded.bmp", mode1_button_pressed);
 			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
 			glBegin(GL_POLYGON);
-				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
-				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
-				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
-				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
+				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
+				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
+				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
+				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
 			glEnd();
 		}
 		
@@ -299,22 +347,36 @@ void Mouse(int button, int state, int x, int y){
 		loadTexture("mod2.bmp", mode2_button);
 		glBindTexture(GL_TEXTURE_2D, mode2_button);
 		glBegin(GL_POLYGON);
-			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
-			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
-			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
-			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
+			glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
+			glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
+			glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
+			glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
 		glEnd();
 		if(mode2Pressed){
 			GLuint mode1_button_pressed;
-			loadTexture("mod2_pressed.bmp", mode1_button_pressed);
+			loadTexture("mod2_clicked.bmp", mode1_button_pressed);
 			glBindTexture(GL_TEXTURE_2D, mode1_button_pressed);
 			glBegin(GL_POLYGON);
 			
-				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT + 96);
-				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP + 96);
-				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP + 96);
-				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT + 96);
+				glTexCoord2f(0, 0); glVertex2f(START_BUTTON_LEFT, START_BUTTON_BOT - 96);
+				glTexCoord2f(0, 1); glVertex2f(START_BUTTON_LEFT, START_BUTTON_UP - 96);
+				glTexCoord2f(1, 1); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_UP - 96);
+				glTexCoord2f(1, 0); glVertex2f(START_BUTTON_RIGHT, START_BUTTON_BOT - 96);
 			glEnd();
+		}
+		if(x > START_BUTTON_LEFT + 386 && x < START_BUTTON_RIGHT + 386  && y > START_BUTTON_BOT + 268 && y < START_BUTTON_UP + 268 )
+		{
+			if(state == 0)
+			{
+				backPressed = true;
+				PlaySound(TEXT("C:\\click.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				glutPostRedisplay();
+			}
+			if(state)
+			{
+				mode = GAME_MENU ;
+				glutPostRedisplay() ;
+			}
 		}
 		glutSwapBuffers();
 	}
