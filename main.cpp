@@ -260,7 +260,7 @@ void Mouse(int button, int state, int x, int y){
 		glLoadIdentity();
 		glColor3f(1,1,1);
 		gluLookAt(0,0,10.0f,0,0,0,0,1,0); 
-		if(x > START_BUTTON_LEFT + 472 && x < START_BUTTON_RIGHT + 472  && y > START_BUTTON_BOT + 268 && y < START_BUTTON_UP + 268 )
+		if(x > START_BUTTON_LEFT + 386 && x < START_BUTTON_RIGHT + 386  && y > START_BUTTON_BOT + 268 && y < START_BUTTON_UP + 268 )
 		{
 			if(state == 0)
 			{
@@ -275,7 +275,7 @@ void Mouse(int button, int state, int x, int y){
 			}
 		}
 		glEnd();
-		glutSwapBuffers();
+		//glutSwapBuffers();
 	}
 	if(mode == GAME_CLOSE)
 	{
@@ -313,7 +313,7 @@ void Mouse(int button, int state, int x, int y){
 			}
 		}
 		glEnd();
-		glutSwapBuffers();
+		//glutSwapBuffers();
 	}
 	if(mode == GAME_MODE_SELECT){
 		glClearColor(1.0, 1.0, 1.0, 1.0);   //??????
