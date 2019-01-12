@@ -1,4 +1,5 @@
 #include <GL\glut.h>
+#include <GL\freeglut.h>
 #include <cmath>
 #include <windows.h>
 #include <Mmsystem.h>
